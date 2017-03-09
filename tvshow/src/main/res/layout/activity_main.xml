@@ -5,143 +5,37 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/background"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="5dp"
     tools:context="com.duowei.tvshow.MainActivity">
-
-    <SurfaceView
-        android:id="@+id/surfaceView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:textColor="@android:color/white"/>
-
-    <TextView
-        android:id="@+id/tvProgress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:textColor="@android:color/white"
-        android:textSize="30sp"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="播放 - 本地视频1"/>
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="播放 - 本地视频2"/>
-
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="播放 - 网络视频"/>
-
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="播放 - 本地音频"/>
-
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="添加下一曲"/>
-
-    </LinearLayout>
-
-
-    -
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/button6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="暂停"/>
-
-        <Button
-            android:id="@+id/button7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="继续"/>
-
-        <Button
-            android:id="@+id/button8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="停止"/>
-
-
-        -
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/button9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="快进"/>
-
-            <Button
-                android:id="@+id/button10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="快退"/>
-
-        </LinearLayout>
-
-
-        -
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/button11"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="全屏/缩放"/>
-
-            <Button
-                android:id="@+id/button12"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="循环/取消循环"/>
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/button13"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="允许/禁止翻转"/>
-
-    </LinearLayout>
+    <include
+        android:id="@+id/view_movie"
+        layout="@layout/layout_item_view"
+        android:layout_width="220dp"
+        android:layout_height="180dp"
+        android:layout_centerVertical="true">
+        <requestFocus/>
+    </include>
+    <include
+        android:id="@+id/view_image"
+        layout="@layout/layout_item_view_two"
+        android:layout_width="220dp"
+        android:layout_height="180dp"
+        android:layout_toRightOf="@+id/view_movie"
+        android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true">
+    </include>
+    <include
+        android:id="@+id/view_setting"
+        android:layout_width="220dp"
+        android:layout_height="180dp"
+        layout="@layout/layout_item_view_three"
+        android:layout_toRightOf="@+id/view_image"
+        android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true">
+    </include>
 </RelativeLayout>

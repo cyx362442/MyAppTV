@@ -19,11 +19,11 @@ public class FileDir {
    }
 
    public static final String getZipVideo(){
-      return SDPATH+"duowei/video2.zip";
+      return SDPATH+"duowei/video.zip";
    }
 
    public static String getVideoName(){
-      return SDPATH+"duowei/video2/";
+      return SDPATH+"duowei/video/";
    }
 
    /**获取所有视频文件路径*/
@@ -33,7 +33,7 @@ public class FileDir {
       if(scanFile.isDirectory()){
          for(File file:scanFile.listFiles()){
             String path = file.getAbsolutePath();
-            if (path.endsWith(".mp4") || path.endsWith(".avi") || path.endsWith(".mkv")) {
+            if (path.endsWith(".mp4") || path.endsWith(".avi") || path.endsWith(".mkv")||path.endsWith(".rmvb")) {
                mVideoList.add(path);
             }
          }

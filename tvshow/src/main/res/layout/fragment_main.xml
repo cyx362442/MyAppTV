@@ -3,14 +3,9 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context="com.duowei.tvshow.fragment.VideoFragment">
-    <RelativeLayout
+    <com.duowei.tvshow.jcvideoplayer.JCVideoPlayerStandard
+        android:id="@+id/jcvideoplayer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/shape_video">
-        <SurfaceView
-            android:id="@+id/surfaceView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-    </RelativeLayout>
+        android:layout_height="match_parent">
+    </com.duowei.tvshow.jcvideoplayer.JCVideoPlayerStandard>
 </FrameLayout>

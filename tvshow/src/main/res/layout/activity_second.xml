@@ -15,27 +15,30 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
             <FrameLayout
                 android:id="@+id/frame01"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
             </FrameLayout>
             <FrameLayout
                 android:id="@+id/frame02"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
             </FrameLayout>
             <FrameLayout
                 android:id="@+id/frame03"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
             </FrameLayout>
         </LinearLayout>
@@ -43,12 +46,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
+
             <FrameLayout
                 android:id="@+id/frame04"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
             </FrameLayout>
+
             <FrameLayout
                 android:id="@+id/frame05"
                 android:layout_width="match_parent"
@@ -72,12 +77,14 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1">
             </FrameLayout>
+
             <FrameLayout
                 android:id="@+id/frame08"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
             </FrameLayout>
+
             <FrameLayout
                 android:id="@+id/frame09"
                 android:layout_width="match_parent"

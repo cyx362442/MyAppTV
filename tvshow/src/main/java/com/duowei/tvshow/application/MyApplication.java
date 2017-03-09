@@ -1,5 +1,7 @@
 package com.duowei.tvshow.application;
 import com.duowei.tvshow.httputils.MyVolley;
+import com.squareup.leakcanary.LeakCanary;
+
 import org.litepal.LitePalApplication;
 
 /**
@@ -11,5 +13,6 @@ public class MyApplication extends LitePalApplication {
     public void onCreate() {
         super.onCreate();
         MyVolley.init(this);
+        LeakCanary.install(this);
     }
 }

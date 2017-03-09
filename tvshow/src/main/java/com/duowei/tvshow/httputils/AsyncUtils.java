@@ -5,9 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.duowei.tvshow.MultimediaActivity;
 import com.duowei.tvshow.SecondActivity;
 import com.duowei.tvshow.contact.FileDir;
 
@@ -61,7 +61,7 @@ public class AsyncUtils extends AsyncTask<String, Integer, Integer> {
             lenghtOfFile = urlConnection.getContentLength();//获取下载文件的总长度
             is = urlConnection.getInputStream();// 开启流
             fos = new FileOutputStream(fileZip);// 开启写的流
-            byte[] bytes = new byte[4096];
+            byte[] bytes = new byte[1024];
             while ((count = is.read(bytes)) != -1) {
                 total += count;
                 fos.write(bytes, 0, count);
@@ -104,8 +104,11 @@ public class AsyncUtils extends AsyncTask<String, Integer, Integer> {
                 break;
             case 1:
                 mProgressDialog.setMessage("下载成功，正在解压中……");
-                ZipAsync zipAsync = new ZipAsync();
-                zipAsync.execute();
+                mProgressDialog.dismiss();
+//                ZipAsync zipAsync = new ZipAsync();
+//                zipAsync.execute();
+                ZipExtractorTask task = new ZipExtractorTask(FileDir.getZipVideo(), FileDir.getDir(), context, true);
+                task.execute();
                 break;
             default:
                 break;
@@ -130,7 +133,7 @@ public class AsyncUtils extends AsyncTask<String, Integer, Integer> {
                         File file = new File(FileDir.getDir() + File.separator + name);
                         file.createNewFile();
                         FileOutputStream out = new FileOutputStream(file);
-                        byte[] buffer = new byte[4096];
+                        byte[] buffer = new byte[1024];
                         while ((ch = in.read(buffer)) != -1) {
                             out.write(buffer, 0, ch);
                             out.flush();
@@ -149,7 +152,6 @@ public class AsyncUtils extends AsyncTask<String, Integer, Integer> {
         @Override
         protected void onPostExecute(Integer integer) {
             if(integer==-1){
-//                Intent intent = new Intent(context, MultimediaActivity.class);
                 Intent intent = new Intent(context, SecondActivity.class);
                 context.startActivity(intent);
                 Activity context = (Activity) AsyncUtils.this.context;
