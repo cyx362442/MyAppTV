@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MyAppTV.iml" filepath="$PROJECT_DIR$/MyAppTV.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyAppTV.iml" filepath="$PROJECT_DIR$/MyAppTV.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tvshow/tvshow.iml" filepath="$PROJECT_DIR$/tvshow/tvshow.iml" />
       <module fileurl="file://$PROJECT_DIR$/tvshow/tvshow.iml" filepath="$PROJECT_DIR$/tvshow/tvshow.iml" />
     </modules>
   </component>

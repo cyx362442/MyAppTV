@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.view_setting:
                 Toast.makeText(this,"view3",Toast.LENGTH_LONG).show();
+                mIntent=new Intent(this,SettingActivity.class);
+                startActivity(mIntent);
                 break;
         }
     }

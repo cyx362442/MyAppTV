@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.duowei.tvshow.bean.CityCode;
@@ -25,8 +27,13 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private SharedPreferences.Editor mEdit;
     private String currentVersion="";//当前版本
-    private String zoneName="发发";//当前电视区号
-    private String url="http://ai.wxdw.top/mobile.php?act=module&weid=175&name=light_box_manage&do=GetZoneTime&storeid=20";
+    private String mZoneNum="";
+//    private String url="http://ai.wxdw.top/mobile.php?act=module&weid=175&name=light_box_manage&do=GetZoneTime&storeid=30";
+    private String url;
+    private String mWeid;
+    private String mWurl;
+    private String mStoreid;//门店ID
+    private Intent mIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +43,18 @@ public class WelcomeActivity extends AppCompatActivity {
         mEdit = preferences.edit();
         int weather = preferences.getInt("weather", 0);
         currentVersion = preferences.getString("version", "");
-        Log.e("weather==",weather+"号");
+        mWurl = preferences.getString("wurl", "");
+        mWeid = preferences.getString("weid", "");
+        mStoreid=preferences.getString("storeid","");
+        mZoneNum=preferences.getString("zoneNum","");
+        Log.e("====",mWurl+":"+mWeid+":"+mStoreid+":"+mZoneNum);
+        if(TextUtils.isEmpty(mWurl)||TextUtils.isEmpty(mWeid)||TextUtils.isEmpty(mStoreid)||TextUtils.isEmpty(mZoneNum)){
+            mIntent=new Intent(this,SettingActivity.class);
+            startActivity(mIntent);
+            finish();
+            return;
+        }
+        url ="http://"+mWurl+"/mobile.php?act=module&weid="+mWeid+"&name=light_box_manage&do=GetZoneTime&storeid="+mStoreid;
 //        if(weather==1){
 //           Http_File();
 //        }else{
@@ -45,10 +63,11 @@ public class WelcomeActivity extends AppCompatActivity {
 //        Intent intent = new Intent(this, MainActivity.class);
 //        startActivity(intent);
 //        finish();
-        DownHTTP.getVolley(url, new VolleyResultListener() {
+        DownHTTP.getVolley(this.url, new VolleyResultListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.e("====",error+"");
+                Toast.makeText(WelcomeActivity.this,"网络异常",Toast.LENGTH_LONG).show();
             }
             @Override
             public void onResponse(String response) {
@@ -58,20 +77,23 @@ public class WelcomeActivity extends AppCompatActivity {
                 String version = zoneTime.getVersion();//新版本号
                 if(currentVersion.equals(version)){//版本号相同
                     toMainActivity();
-                }else{
+                }else{//版本号不同更新
+                    mEdit.putString("version",version);
+                    mEdit.commit();
                     String down_data = zoneTime.getDown_data();//压缩包下载地址
                     List<ZoneTime.ZoneTimeBean> list_zone = zoneTime.getZone_time();//电视区域信息
                     DataSupport.deleteAll(OneDataBean.class);
                     /**找到该电视区号对应的数据信息集*/
                     for(int i=0;i<list_zone.size();i++){
                         ZoneTime.ZoneTimeBean.ZoneBean zone = list_zone.get(i).getZone();//电视区号
-                        if(zoneName.equals(zone.getZone())){//如何区号等于当前电视区号
+                        if(mZoneNum.equals(zone.getZone())){//如何区号等于当前电视区号
+                            Log.e("======","区号相等");
                             List<ZoneTime.ZoneTimeBean.OneDataBean> one_data = list_zone.get(i).getOne_data();
                             for(int j=0;j<one_data.size();j++){
                                 String time = one_data.get(j).getTime();//起始跟结束时间
                                 String ad = one_data.get(j).getAd();//动态广告词
                                 String video_palce = one_data.get(j).getVideo_palce();//视频的位置
-                                String image_name = one_data.get(j).getFile_name().getImage_name();//图片名字
+                                String image_name = one_data.get(j).getFile_name().getImage_name();//图片名称
                                 String video_name = one_data.get(j).getFile_name().getVideo_name();//视频名称
                                 /**插入数据库*/
                                 OneDataBean oneDataBean = new OneDataBean(time, ad, video_palce, image_name, video_name);
@@ -79,7 +101,8 @@ public class WelcomeActivity extends AppCompatActivity {
                             }
                         }
                     }
-//                    Http_File("http://192.168.1.78:3344/video.zip");
+                    Log.e("======",down_data);
+                    Http_File(down_data);
                 }
             }
         });
@@ -115,8 +138,8 @@ public class WelcomeActivity extends AppCompatActivity {
         asyncUtils.execute(url);
     }
     private void toMainActivity(){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        mIntent = new Intent(this, MainActivity.class);
+        startActivity(mIntent);
         finish();
     }
     @Override

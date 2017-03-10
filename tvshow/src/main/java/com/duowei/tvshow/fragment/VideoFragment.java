@@ -38,9 +38,11 @@ public class VideoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inflate = inflater.inflate(R.layout.fragment_main, container, false);
-        mJcVideoPlayer = (JCVideoPlayerStandard) inflate.findViewById(R.id.jcvideoplayer);
-        //从第一部开始播放
-        mJcVideoPlayer.setUp(listPath.get(0),JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+        if(listPath.size()>0){
+            mJcVideoPlayer = (JCVideoPlayerStandard) inflate.findViewById(R.id.jcvideoplayer);
+            //从第一部开始播放
+            mJcVideoPlayer.setUp(listPath.get(0),JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+        }
         return inflate;
     }
     @Override

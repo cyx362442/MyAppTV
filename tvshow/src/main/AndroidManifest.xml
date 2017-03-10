@@ -41,7 +41,11 @@
             android:name=".ThirdActivity"
             android:screenOrientation="landscape">
         </activity>
-        <activity android:name=".VideoFullActivity"
+        <activity
+            android:name=".VideoFullActivity"
+            android:screenOrientation="landscape">
+        </activity>
+        <activity android:name=".SettingActivity"
                   android:screenOrientation="landscape">
         </activity>
     </application>

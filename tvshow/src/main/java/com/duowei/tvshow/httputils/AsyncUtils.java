@@ -107,7 +107,7 @@ public class AsyncUtils extends AsyncTask<String, Integer, Integer> {
                 mProgressDialog.dismiss();
 //                ZipAsync zipAsync = new ZipAsync();
 //                zipAsync.execute();
-                ZipExtractorTask task = new ZipExtractorTask(FileDir.getZipVideo(), FileDir.getDir(), context, true);
+                ZipExtractorTask task = new ZipExtractorTask(FileDir.getZipVideo(), FileDir.getVideoName(), context, true);
                 task.execute();
                 break;
             default:
