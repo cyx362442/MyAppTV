@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:background="#2D2D2D"
+    tools:context="com.duowei.tvshow.VideoFullActivity">
+    <com.duowei.tvshow.jcvideoplayer.JCVideoPlayerStandard
+        android:id="@+id/jcvideoplayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </com.duowei.tvshow.jcvideoplayer.JCVideoPlayerStandard>
+</RelativeLayout>
