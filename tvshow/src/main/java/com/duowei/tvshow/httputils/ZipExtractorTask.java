@@ -64,6 +64,7 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
     protected void onPostExecute(Long result) {
         // TODO Auto-generated method stub
         //super.onPostExecute(result);
+        Log.e("result==",result+"");
         if(mDialog!=null&&mDialog.isShowing()){
             Intent intent = new Intent(context, SecondActivity.class);
             context.startActivity(intent);
@@ -79,8 +80,8 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
         // TODO Auto-generated method stub
         //super.onPreExecute();
         if(mDialog!=null){
-            mDialog.setTitle("Extracting");
-            mDialog.setMessage(mInput.getName());
+            mDialog.setTitle("提示");
+            mDialog.setMessage("文件解压中("+mInput.getName()+")……");
             mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
