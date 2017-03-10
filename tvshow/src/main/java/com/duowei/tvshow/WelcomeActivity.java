@@ -62,14 +62,24 @@ public class WelcomeActivity extends AppCompatActivity {
                     String down_data = zoneTime.getDown_data();//压缩包下载地址
                     List<ZoneTime.ZoneTimeBean> list_zone = zoneTime.getZone_time();//电视区域信息
                     DataSupport.deleteAll(OneDataBean.class);
+                    /**找到该电视区号对应的数据信息集*/
                     for(int i=0;i<list_zone.size();i++){
                         ZoneTime.ZoneTimeBean.ZoneBean zone = list_zone.get(i).getZone();//电视区号
-                        if(zoneName.equals(zone.getZone())){//找到该电视区号对应的数据信息集
-                            List<OneDataBean> list_one_data = list_zone.get(i).getOne_data();
-                            DataSupport.saveAll(list_one_data);
+                        if(zoneName.equals(zone.getZone())){//如何区号等于当前电视区号
+                            List<ZoneTime.ZoneTimeBean.OneDataBean> one_data = list_zone.get(i).getOne_data();
+                            for(int j=0;j<one_data.size();j++){
+                                String time = one_data.get(j).getTime();//起始跟结束时间
+                                String ad = one_data.get(j).getAd();//动态广告词
+                                String video_palce = one_data.get(j).getVideo_palce();//视频的位置
+                                String image_name = one_data.get(j).getFile_name().getImage_name();//图片名字
+                                String video_name = one_data.get(j).getFile_name().getVideo_name();//视频名称
+                                /**插入数据库*/
+                                OneDataBean oneDataBean = new OneDataBean(time, ad, video_palce, image_name, video_name);
+                                oneDataBean.save();
+                            }
                         }
                     }
-                    Http_File("http://192.168.1.78:3344/video.zip");
+//                    Http_File("http://192.168.1.78:3344/video.zip");
                 }
             }
         });

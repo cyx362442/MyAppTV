@@ -3,10 +3,10 @@ package com.duowei.tvshow.bean;
 import java.util.List;
 
 /**
- * Created by Administrator on 2017-03-09.
+ * Created by Administrator on 2017-03-10.
  */
 
-public class ZoneTime {
+public class test {
 
     /**
      * zone_time : [{"zone":{"zone":"发发"},"one_data":[{"time":"15:50-16:00","ad":"","video_palce":"2","file_name":{"image_name":"1489040365201.png","video_name":"null"}},{"time":"15:50-16:05","ad":"发情啊围清风","video_palce":"5","file_name":{"image_name":"null","video_name":"null"}},{"time":"01:05-14:10","ad":"fqwrqwr","video_palce":"1","file_name":{"image_name":"null","video_name":"null"}}]}]
