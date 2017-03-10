@@ -96,7 +96,7 @@ public class WelcomeActivity extends AppCompatActivity {
                                 String image_name = one_data.get(j).getFile_name().getImage_name();//图片名称
                                 String video_name = one_data.get(j).getFile_name().getVideo_name();//视频名称
                                 /**插入数据库*/
-                                OneDataBean oneDataBean = new OneDataBean(time, ad, video_palce, image_name, video_name);
+                                OneDataBean oneDataBean = new OneDataBean(mZoneNum,time, ad, video_palce, image_name, video_name);
                                 oneDataBean.save();
                             }
                         }

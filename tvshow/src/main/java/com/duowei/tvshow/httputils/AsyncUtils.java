@@ -105,8 +105,8 @@ public class AsyncUtils extends AsyncTask<String, Integer, Integer> {
             case 1:
                 mProgressDialog.setMessage("下载成功，正在解压中……");
                 mProgressDialog.dismiss();
-//                ZipAsync zipAsync = new ZipAsync();
-//                zipAsync.execute();
+                deleteDir();
+
                 ZipExtractorTask task = new ZipExtractorTask(FileDir.getZipVideo(), FileDir.getVideoName(), context, true);
                 task.execute();
                 break;
@@ -114,51 +114,18 @@ public class AsyncUtils extends AsyncTask<String, Integer, Integer> {
                 break;
         }
     }
-    class ZipAsync extends AsyncTask<Integer,Integer,Integer>{
-        @Override
-        protected Integer doInBackground(Integer... Integer) {
-            int ch = 0;
-            try {
-                ZipInputStream in = new ZipInputStream(new FileInputStream(FileDir.getZipVideo()));//解压的文件
-                ZipEntry z;
-                String name = "";
-                while ((z = in.getNextEntry()) != null) {
-                    name = z.getName();
-                    if (z.isDirectory()) {
-                        // get the folder name of the widget
-                        name = name.substring(0, name.length() - 1);
-                        File folder = new File(FileDir.getDir() + File.separator + name);
-                        folder.mkdirs();
-                    } else {
-                        File file = new File(FileDir.getDir() + File.separator + name);
-                        file.createNewFile();
-                        FileOutputStream out = new FileOutputStream(file);
-                        byte[] buffer = new byte[1024];
-                        while ((ch = in.read(buffer)) != -1) {
-                            out.write(buffer, 0, ch);
-                            out.flush();
-                        }
-                        out.close();
-                    }
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return ch;
-        }
+    //删除文件夹和文件夹里面的文件
+    public static void deleteDir() {
+        File dir = new File(FileDir.getVideoName());
+        if (dir == null || !dir.exists() || !dir.isDirectory())
+            return;
 
-        @Override
-        protected void onPostExecute(Integer integer) {
-            if(integer==-1){
-                Intent intent = new Intent(context, SecondActivity.class);
-                context.startActivity(intent);
-                Activity context = (Activity) AsyncUtils.this.context;
-                context.finish();
-                mProgressDialog.dismiss();
-            }
-            super.onPostExecute(integer);
+        for (File file : dir.listFiles()) {
+            if (file.isFile())
+                file.delete(); // 删除所有文件
+            else if (file.isDirectory())
+                deleteDir(); // 递规的方式删除文件夹
         }
+//        dir.delete();// 删除目录本身
     }
 }
