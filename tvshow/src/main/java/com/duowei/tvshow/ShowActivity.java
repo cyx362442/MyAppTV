@@ -77,16 +77,17 @@ public class ShowActivity extends AppCompatActivity {
             if(action.equals(ConstsCode.ACTION_START_HEART)){
                 List<OneDataBean> list = DataSupport.findAll(OneDataBean.class);
                 for(OneDataBean bean:list){
-                    String time = bean.time;
+                    String time = bean.time.trim();
                     boolean newTime = isNewTime(time);
-                    if(newTime==true){//找到新的时间段
+                    if(newTime==true){//发现新的时间段
+                        JCVideoPlayer.releaseAllVideos();
                         String playMode = bean.playMode;//播放模式
                         if(playMode.equals("1")){//单图片模式
                             mFile=new File(FileDir.getVideoName()+bean.image_name);//拼接图片路径
                             Picasso.with(ShowActivity.this).load(mFile).fit().centerInside().into(mImageView);
-                            FragmentManager fragmentManager = getSupportFragmentManager();
-                            FragmentTransaction transaction = fragmentManager.beginTransaction();
                             if(mFragment!=null){
+                                FragmentManager fragmentManager = getSupportFragmentManager();
+                                FragmentTransaction transaction = fragmentManager.beginTransaction();
                                 transaction.remove(mFragment);
                                 transaction.commit();
                             }
@@ -118,8 +119,8 @@ public class ShowActivity extends AppCompatActivity {
     /**当前系统时间是否在某个时间段内*/
     private boolean isNewTime(String time) {
         boolean b;
-        String firstTime = time.substring(0, time.indexOf("-")).replace(":","");
-        String lastTime = time.substring(time.indexOf("-") + 1, time.length()).replace(":","");
+        String firstTime = time.substring(0, time.indexOf("-")).trim().replace(":","");
+        String lastTime = time.substring(time.indexOf("-") + 1, time.length()).trim().replace(":","");
         int first = Integer.parseInt(firstTime);
         int last = Integer.parseInt(lastTime);
         if(CurrentTime.getTime()>=first&&CurrentTime.getTime()<last){

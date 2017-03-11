@@ -45,7 +45,7 @@ public class VideoFragment extends Fragment {
         View inflate = inflater.inflate(R.layout.fragment_main, container, false);
         if(!TextUtils.isEmpty(mVideoname)){
             mJcVideoPlayer = (JCVideoPlayerStandard) inflate.findViewById(R.id.jcvideoplayer);
-            //从第一部开始播放
+
             mJcVideoPlayer.setUp(FileDir.getVideoName()+mVideoname,JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
         }
         return inflate;
