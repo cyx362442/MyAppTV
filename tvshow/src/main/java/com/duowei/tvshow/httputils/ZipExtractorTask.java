@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.duowei.tvshow.MainActivity;
 import com.duowei.tvshow.SecondActivity;
 
 import java.io.BufferedInputStream;
@@ -66,7 +67,7 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
         //super.onPostExecute(result);
         Log.e("result==",result+"");
         if(mDialog!=null&&mDialog.isShowing()){
-            Intent intent = new Intent(context, SecondActivity.class);
+            Intent intent = new Intent(context, MainActivity.class);
             context.startActivity(intent);
             Activity context = (Activity) ZipExtractorTask.this.context;
             context.finish();

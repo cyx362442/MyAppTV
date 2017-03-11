@@ -107,7 +107,7 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
     protected int mGestureDownVolume;
     protected float mGestureDownBrightness;
     protected int mSeekTimePosition;
-    private ArrayList<String> mListPath;
+//    private ArrayList<String> mListPath;
 
     public JCVideoPlayer(Context context) {
         super(context);
@@ -121,7 +121,7 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
 
     public void init(Context context) {
         View.inflate(context, getLayoutId(), this);
-        mListPath = FileDir.getVideoPath();
+//        mListPath = FileDir.getVideoPath();
         startButton = (ImageView) findViewById(R.id.start);
         fullscreenButton = (ImageView) findViewById(R.id.fullscreen);
         progressBar = (SeekBar) findViewById(R.id.bottom_seek_progress);
@@ -201,7 +201,7 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
         }
     }
 
-    int position=0;
+//    int position=0;
     public void prepareMediaPlayer() {
         JCVideoPlayerManager.completeAll();
         Log.d(TAG, "prepareMediaPlayer [" + this.hashCode() + "] ");
@@ -210,10 +210,11 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
         AudioManager mAudioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         mAudioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
         JCUtils.scanForActivity(getContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        /**播完继续下一部*/
-        position=position%mListPath.size();
-        JCMediaManager.CURRENT_PLAYING_URL = mListPath.get(position);
-        position++;
+//        /**播完继续下一部*/
+//        position=position%mListPath.size();
+//        JCMediaManager.CURRENT_PLAYING_URL = mListPath.get(position);
+//        position++;
+        JCMediaManager.CURRENT_PLAYING_URL=url;
         JCMediaManager.CURRENT_PLING_LOOP = loop;
         JCMediaManager.MAP_HEADER_DATA = headData;
         setUiWitStateAndScreen(CURRENT_STATE_PREPARING);
@@ -405,7 +406,8 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
                 cancelProgressTimer();
 //                progressBar.setProgress(100);
 //                currentTimeTextView.setText(totalTimeTextView.getText());
-                prepareMediaPlayer();//继续播
+                /**播放结继续播*/
+                prepareMediaPlayer();
                 break;
         }
     }

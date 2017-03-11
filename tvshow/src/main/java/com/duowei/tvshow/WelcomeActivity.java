@@ -34,6 +34,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private String mWurl;
     private String mStoreid;//门店ID
     private Intent mIntent;
+    private String playMode="";//播放模式
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +96,17 @@ public class WelcomeActivity extends AppCompatActivity {
                                 String video_palce = one_data.get(j).getVideo_palce();//视频的位置
                                 String image_name = one_data.get(j).getFile_name().getImage_name();//图片名称
                                 String video_name = one_data.get(j).getFile_name().getVideo_name();//视频名称
+                                if(!TextUtils.isEmpty(image_name)&&TextUtils.isEmpty(ad.trim())&&video_name.equals("null")){
+                                    playMode="1";
+                                }else if(!video_name.equals("null")&&!TextUtils.isEmpty(image_name)&&TextUtils.isEmpty(ad)){
+                                    playMode="2";
+                                }else if(!TextUtils.isEmpty(ad.trim())){
+                                    playMode="3";
+                                }else{
+                                    playMode="4";
+                                }
                                 /**插入数据库*/
-                                OneDataBean oneDataBean = new OneDataBean(mZoneNum,time, ad, video_palce, image_name, video_name);
+                                OneDataBean oneDataBean = new OneDataBean(playMode,time, ad, video_palce, image_name, video_name);
                                 oneDataBean.save();
                             }
                         }

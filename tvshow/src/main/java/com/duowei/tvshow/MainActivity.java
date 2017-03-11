@@ -1,15 +1,26 @@
 package com.duowei.tvshow;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.duowei.tvshow.bean.OneDataBean;
+import com.duowei.tvshow.contact.Consts;
+import com.duowei.tvshow.contact.ConstsCode;
+import com.duowei.tvshow.service.BroadService;
+
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Intent mIntent;
-
+    private Intent mIntentService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,6 +28,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.view_image).setOnClickListener(this);
         findViewById(R.id.view_movie).setOnClickListener(this);
         findViewById(R.id.view_setting).setOnClickListener(this);
+        Intent intent = new Intent(this, ShowActivity.class);
+        startActivity(intent);
+        mIntentService = new Intent(this, BroadService.class);
+        startService(mIntentService);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mIntentService!=null){
+            stopService(mIntentService);
+        }
     }
 
     @Override

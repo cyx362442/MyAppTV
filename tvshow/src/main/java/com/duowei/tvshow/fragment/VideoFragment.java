@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +22,9 @@ import java.util.ArrayList;
  */
 public class VideoFragment extends Fragment {
 
-    private ArrayList<String> listPath;
+//    private ArrayList<String> listPath;
     private JCVideoPlayerStandard mJcVideoPlayer;
+    private String mVideoname;
 
     @Override
     public void onAttach(Context context) {
@@ -31,17 +34,22 @@ public class VideoFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listPath = FileDir.getVideoPath();
+//        listPath = FileDir.getVideoPath();
+        Bundle bundle = getArguments();
+        if(bundle!=null){
+            mVideoname = bundle.getString("videoname");
+            Log.e("====",mVideoname);
+        }
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inflate = inflater.inflate(R.layout.fragment_main, container, false);
-        if(listPath.size()>0){
+        if(!TextUtils.isEmpty(mVideoname)){
             mJcVideoPlayer = (JCVideoPlayerStandard) inflate.findViewById(R.id.jcvideoplayer);
             //从第一部开始播放
-            mJcVideoPlayer.setUp(listPath.get(0),JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+            mJcVideoPlayer.setUp(FileDir.getVideoName()+mVideoname,JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
         }
         return inflate;
     }
