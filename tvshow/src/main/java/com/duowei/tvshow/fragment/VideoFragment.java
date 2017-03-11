@@ -22,17 +22,8 @@ import java.util.ArrayList;
  */
 public class VideoFragment extends Fragment {
 
-//    private ArrayList<String> listPath;
     private JCVideoPlayerStandard mJcVideoPlayer;
     private String mVideoname;
-
-    public String getVideoname() {
-        return mVideoname;
-    }
-
-    public void setVideoname(String videoname) {
-        mVideoname = videoname;
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -42,11 +33,9 @@ public class VideoFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        listPath = FileDir.getVideoPath();
         Bundle bundle = getArguments();
         if(bundle!=null){
             mVideoname = bundle.getString("videoname");
-            Log.e("====",mVideoname);
         }
     }
     @Override

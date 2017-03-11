@@ -101,7 +101,6 @@ public class ShowActivity extends AppCompatActivity {
                             Bundle bundle = new Bundle();
                             bundle.putString("videoname",bean.video_name);//图片名称
                             mFragment.setArguments(bundle);
-//                            mFragment.setVideoname(bean.video_name);
                             int place = Integer.parseInt(bean.video_palce);//视频位置
                             mFile=new File(FileDir.getVideoName()+bean.image_name);//拼接图片路径
                             Picasso.with(ShowActivity.this).load(mFile).fit().centerInside().into(mImageView);

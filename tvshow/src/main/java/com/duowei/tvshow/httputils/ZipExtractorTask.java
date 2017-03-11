@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.duowei.tvshow.MainActivity;
-import com.duowei.tvshow.SecondActivity;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

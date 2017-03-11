@@ -31,16 +31,6 @@
             android:screenOrientation="landscape">
         </activity>
         <activity
-            android:name=".FirstActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="landscape">
-        </activity>
-        <activity
-            android:name=".SecondActivity"
-            android:configChanges="keyboard|screenSize|orientation|layoutDirection"
-            android:screenOrientation="landscape">
-        </activity>
-        <activity
             android:name=".ThirdActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="landscape">
