@@ -37,7 +37,6 @@ public class ShowActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show);
-        mFragment=new VideoFragment();
         mImageView = (ImageView) findViewById(R.id.image);
         mId = new int[]{R.id.frame01,R.id.frame02,R.id.frame03,
                 R.id.frame04,R.id.frame05,R.id.frame06,
@@ -92,11 +91,18 @@ public class ShowActivity extends AppCompatActivity {
                                 transaction.commit();
                             }
                         }else if(playMode.equals("2")){//视频图像混排模式
+                            if(mFragment!=null){
+                                FragmentManager fragmentManager = getSupportFragmentManager();
+                                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                transaction.remove(mFragment);
+                                transaction.commit();
+                            }
+                            mFragment=new VideoFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("videoname",bean.video_name);//图片名称
+                            mFragment.setArguments(bundle);
+//                            mFragment.setVideoname(bean.video_name);
                             int place = Integer.parseInt(bean.video_palce);//视频位置
-//                            Bundle bundle = new Bundle();
-//                            bundle.putString("videoname",bean.video_name);//图片名称
-//                            mFragment.setArguments(bundle);
-                            mFragment.setVideoname(bean.video_name);
                             mFile=new File(FileDir.getVideoName()+bean.image_name);//拼接图片路径
                             Picasso.with(ShowActivity.this).load(mFile).fit().centerInside().into(mImageView);
                             FragmentManager fragmentManager = getSupportFragmentManager();

@@ -43,11 +43,11 @@ public class VideoFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        listPath = FileDir.getVideoPath();
-//        Bundle bundle = getArguments();
-//        if(bundle!=null){
-//            mVideoname = bundle.getString("videoname");
-//            Log.e("====",mVideoname);
-//        }
+        Bundle bundle = getArguments();
+        if(bundle!=null){
+            mVideoname = bundle.getString("videoname");
+            Log.e("====",mVideoname);
+        }
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
