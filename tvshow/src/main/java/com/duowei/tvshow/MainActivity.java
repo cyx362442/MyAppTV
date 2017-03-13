@@ -8,14 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.duowei.tvshow.bean.OneDataBean;
-import com.duowei.tvshow.contact.Consts;
-import com.duowei.tvshow.contact.ConstsCode;
 import com.duowei.tvshow.service.BroadService;
-
-import org.litepal.crud.DataSupport;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 

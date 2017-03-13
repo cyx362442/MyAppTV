@@ -10,11 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.duowei.tvshow.R;
 import com.duowei.tvshow.contact.FileDir;
 import com.duowei.tvshow.jcvideoplayer.JCVideoPlayerStandard;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -44,9 +46,13 @@ public class VideoFragment extends Fragment {
         // Inflate the layout for this fragment
         View inflate = inflater.inflate(R.layout.fragment_main, container, false);
         if(!TextUtils.isEmpty(mVideoname)){
-            mJcVideoPlayer = (JCVideoPlayerStandard) inflate.findViewById(R.id.jcvideoplayer);
-
-            mJcVideoPlayer.setUp(FileDir.getVideoName()+mVideoname,JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+            File file = new File(FileDir.getVideoName() + mVideoname);
+            if(!file.exists()){
+                Toast.makeText(getActivity(),"视频文件不存在",Toast.LENGTH_LONG).show();
+            }else{
+                mJcVideoPlayer = (JCVideoPlayerStandard) inflate.findViewById(R.id.jcvideoplayer);
+                mJcVideoPlayer.setUp(FileDir.getVideoName()+mVideoname,JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+            }
         }
         return inflate;
     }

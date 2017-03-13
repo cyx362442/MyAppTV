@@ -96,11 +96,11 @@ public class WelcomeActivity extends AppCompatActivity {
                                 String video_palce = one_data.get(j).getVideo_palce();//视频的位置
                                 String image_name = one_data.get(j).getFile_name().getImage_name();//图片名称
                                 String video_name = one_data.get(j).getFile_name().getVideo_name();//视频名称
-                                if(!TextUtils.isEmpty(image_name)&&TextUtils.isEmpty(ad.trim())&&video_name.equals("null")){
+                                if(TextUtils.isEmpty(ad.trim())&&video_name.equals("null")){//纯图片
                                     playMode="1";
-                                }else if(!video_name.equals("null")&&!TextUtils.isEmpty(image_name)&&TextUtils.isEmpty(ad)){
+                                }else if(!video_name.equals("null")&&TextUtils.isEmpty(ad)){//图片、视频混合
                                     playMode="2";
-                                }else if(!TextUtils.isEmpty(ad.trim())){
+                                }else if(!TextUtils.isEmpty(ad.trim())){//带滚动字体
                                     playMode="3";
                                 }else{
                                     playMode="4";

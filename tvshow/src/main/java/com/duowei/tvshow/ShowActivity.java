@@ -84,27 +84,34 @@ public class ShowActivity extends AppCompatActivity {
                         String playMode = bean.playMode;//播放模式
                         if(playMode.equals("1")){//单图片模式
                             mFile=new File(FileDir.getVideoName()+bean.image_name);//拼接图片路径
-                            Picasso.with(ShowActivity.this).load(mFile).fit().centerInside().into(mImageView);
-                            if(mFragment!=null){
+                            if(mFile.exists()){//文件存在读取
+                                Picasso.with(ShowActivity.this).load(mFile).fit().centerInside().into(mImageView);
+                            }else{//不存在设一张默认的图片
+                                Picasso.with(ShowActivity.this).load(R.mipmap.timg4).fit().centerInside().into(mImageView);
+                            }
+                            if(mFragment!=null){//删除上一次的视频
                                 FragmentManager fragmentManager = getSupportFragmentManager();
                                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                                 transaction.remove(mFragment);
                                 transaction.commit();
                             }
                         }else if(playMode.equals("2")){//视频图像混排模式
-                            if(mFragment!=null){
-                                FragmentManager fragmentManager = getSupportFragmentManager();
-                                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                                transaction.remove(mFragment);
-                                transaction.commit();
-                            }
+//                            if(mFragment!=null){
+//                                FragmentManager fragmentManager = getSupportFragmentManager();
+//                                FragmentTransaction transaction = fragmentManager.beginTransaction();
+//                                transaction.remove(mFragment);
+//                                transaction.commit();
+//                            }
                             mFragment=new VideoFragment();
                             Bundle bundle = new Bundle();
                             bundle.putString("videoname",bean.video_name);//图片名称
                             mFragment.setArguments(bundle);
                             int place = Integer.parseInt(bean.video_palce);//视频位置
-                            mFile=new File(FileDir.getVideoName()+bean.image_name);//拼接图片路径
-                            Picasso.with(ShowActivity.this).load(mFile).fit().centerInside().into(mImageView);
+                            if(mFile.exists()){//文件存在得读取
+                                Picasso.with(ShowActivity.this).load(mFile).fit().centerInside().into(mImageView);
+                            }else{//不存在设一张默认的图片
+                                Picasso.with(ShowActivity.this).load(R.mipmap.timg4).fit().centerInside().into(mImageView);
+                            }
                             FragmentManager fragmentManager = getSupportFragmentManager();
                             FragmentTransaction transaction = fragmentManager.beginTransaction();
                             transaction.replace(mId[place-1],mFragment);
