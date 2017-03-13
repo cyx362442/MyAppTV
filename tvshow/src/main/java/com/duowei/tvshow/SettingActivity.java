@@ -1,12 +1,17 @@
 package com.duowei.tvshow;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 
 import com.duowei.tvshow.contact.Consts;
 
@@ -17,6 +22,8 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
     private ListPreference mListPreference;
     private CheckBoxPreference mCheckPreference;
     private SharedPreferences.Editor mEdit;
+    private Intent mIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,5 +77,33 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
             mEdit.putString("zoneNum",sharedPreferences.getString(key, ""));
         }
         mEdit.commit();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK){
+            SharedPreferences spf = getPreferenceScreen().getSharedPreferences();
+            if(spf.getString(Consts.LIST_KEY,"").equals("")||spf.getString("edittext_key1","").equals("")||
+                    spf.getString("edittext_key2","").equals("")||spf.getString("edittext_key3","").equals("")){
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                        dialog.setTitle("提示")
+                        .setMessage("设置信息未填完整，是否马上退出")
+                        .setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mIntent = new Intent(SettingActivity.this, MainActivity.class);
+                                startActivity(mIntent);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("取消",null)
+                        .create().show();
+            }else{
+                mIntent = new Intent(SettingActivity.this, MainActivity.class);
+                startActivity(mIntent);
+                finish();
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

@@ -8,7 +8,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.duowei.tvshow.bean.OneDataBean;
@@ -17,6 +19,7 @@ import com.duowei.tvshow.contact.FileDir;
 import com.duowei.tvshow.fragment.VideoFragment;
 import com.duowei.tvshow.jcvideoplayer.JCVideoPlayer;
 import com.duowei.tvshow.utils.CurrentTime;
+import com.duowei.tvshow.view.TextSurfaceView;
 import com.squareup.picasso.Picasso;
 
 import org.litepal.crud.DataSupport;
@@ -32,12 +35,14 @@ public class ShowActivity extends AppCompatActivity {
     private File mFile;
     private VideoFragment mFragment;
     private int mLastTime=0;
+    private TextSurfaceView mTsfv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show);
         mImageView = (ImageView) findViewById(R.id.image);
+        mTsfv = (TextSurfaceView) findViewById(R.id.textView);
         mId = new int[]{R.id.frame01,R.id.frame02,R.id.frame03,
                 R.id.frame04,R.id.frame05,R.id.frame06,
                 R.id.frame07,R.id.frame08,R.id.frame09,};
@@ -51,7 +56,7 @@ public class ShowActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Picasso.with(this).load(mFile).fit().centerInside().into(mImageView);
+        Picasso.with(this).load(R.mipmap.timg4).fit().centerInside().into(mImageView);
     }
 
     @Override
@@ -81,48 +86,48 @@ public class ShowActivity extends AppCompatActivity {
                     boolean newTime = isNewTime(time);
                     if(newTime==true){//发现新的时间段
                         JCVideoPlayer.releaseAllVideos();
-                        String playMode = bean.playMode;//播放模式
-                        if(playMode.equals("1")){//单图片模式
+                        removeFragment();//删除上次视频
                             mFile=new File(FileDir.getVideoName()+bean.image_name);//拼接图片路径
-                            if(mFile.exists()){//文件存在读取
-                                Picasso.with(ShowActivity.this).load(mFile).fit().centerInside().into(mImageView);
-                            }else{//不存在设一张默认的图片
-                                Picasso.with(ShowActivity.this).load(R.mipmap.timg4).fit().centerInside().into(mImageView);
-                            }
-                            if(mFragment!=null){//删除上一次的视频
-                                FragmentManager fragmentManager = getSupportFragmentManager();
-                                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                                transaction.remove(mFragment);
-                                transaction.commit();
-                            }
-                        }else if(playMode.equals("2")){//视频图像混排模式
-//                            if(mFragment!=null){
-//                                FragmentManager fragmentManager = getSupportFragmentManager();
-//                                FragmentTransaction transaction = fragmentManager.beginTransaction();
-//                                transaction.remove(mFragment);
-//                                transaction.commit();
-//                            }
-                            mFragment=new VideoFragment();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("videoname",bean.video_name);//图片名称
-                            mFragment.setArguments(bundle);
-                            int place = Integer.parseInt(bean.video_palce);//视频位置
                             if(mFile.exists()){//文件存在得读取
                                 Picasso.with(ShowActivity.this).load(mFile).fit().centerInside().into(mImageView);
                             }else{//不存在设一张默认的图片
                                 Picasso.with(ShowActivity.this).load(R.mipmap.timg4).fit().centerInside().into(mImageView);
                             }
-                            FragmentManager fragmentManager = getSupportFragmentManager();
-                            FragmentTransaction transaction = fragmentManager.beginTransaction();
-                            transaction.replace(mId[place-1],mFragment);
-                            transaction.commit();
-                        }
+                            /**视频文件存在*/
+                            if(!bean.video_name.equals("null")){
+                                mFragment=new VideoFragment();
+                                int place = Integer.parseInt(bean.video_palce);//视频位置
+                                Bundle bundle = new Bundle();
+                                bundle.putString("videoname",bean.video_name);
+                                mFragment.setArguments(bundle);
+                                FragmentManager fragmentManager = getSupportFragmentManager();
+                                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                transaction.replace(mId[place-1],mFragment);
+                                transaction.commit();
+                            }
+                            if(!TextUtils.isEmpty(bean.ad)){//滚动文字
+                                mTsfv.setMove(true);
+                                mTsfv.setContent(bean.ad);
+                            }else{
+                                mTsfv.setMove(false);
+                                mTsfv.setContent("");
+                            }
                         break;
                     }
                 }
             }
         }
     }
+
+    private void removeFragment() {
+        if(mFragment!=null){//删除上一次的视频
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.remove(mFragment);
+            transaction.commit();
+        }
+    }
+
     /**当前系统时间是否在某个时间段内*/
     private boolean isNewTime(String time) {
         boolean b;

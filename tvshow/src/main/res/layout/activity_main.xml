@@ -38,4 +38,13 @@
         android:layout_marginLeft="10dp"
         android:layout_centerVertical="true">
     </include>
+    <include
+        android:id="@+id/view_exit"
+        android:layout_width="220dp"
+        android:layout_height="180dp"
+        layout="@layout/layout_item_view_four"
+        android:layout_toRightOf="@+id/view_setting"
+        android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true">
+    </include>
 </RelativeLayout>

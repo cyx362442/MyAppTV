@@ -26,9 +26,9 @@ public class TextSurfaceView extends SurfaceView implements Callback, Runnable{
      */
     private boolean         isMove = true;
     /**
-     * 移动方向
+     * 移动方向(默认向左)
      */
-    private int             orientation = 2;
+    private int             orientation = 1;
     /**
      * 向左移动
      */

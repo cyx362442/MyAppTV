@@ -12,15 +12,13 @@ public class OneDataBean extends DataSupport {
      * ad :
      * video_palce : 2
      */
-    public String playMode;//播放模式
     public String time;//时间段
     public String ad;//动态广告词
     public String video_palce;//视频空间位置
     public String image_name;//图片名称
     public String video_name;//视频名称
 
-    public OneDataBean(String playMode,String time, String ad, String video_palce, String image_name, String video_name) {
-        this.playMode=playMode;
+    public OneDataBean(String time, String ad, String video_palce, String image_name, String video_name) {
         this.time = time;
         this.ad = ad;
         this.video_palce = video_palce;

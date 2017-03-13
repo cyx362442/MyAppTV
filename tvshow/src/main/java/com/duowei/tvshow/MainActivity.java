@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.view_image).setOnClickListener(this);
         findViewById(R.id.view_movie).setOnClickListener(this);
         findViewById(R.id.view_setting).setOnClickListener(this);
+        findViewById(R.id.view_exit).setOnClickListener(this);
+
         Intent intent = new Intent(this, ShowActivity.class);
         startActivity(intent);
         mIntentService = new Intent(this, BroadService.class);
@@ -59,6 +61,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this,"view3",Toast.LENGTH_LONG).show();
                 mIntent=new Intent(this,SettingActivity.class);
                 startActivity(mIntent);
+                finish();
+                break;
+            case R.id.view_exit:
+                finish();
                 break;
         }
     }

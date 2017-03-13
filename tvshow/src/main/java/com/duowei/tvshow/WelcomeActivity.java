@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -34,7 +35,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private String mWurl;
     private String mStoreid;//门店ID
     private Intent mIntent;
-    private String playMode="";//播放模式
+    private  boolean isLoad=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,15 +65,22 @@ public class WelcomeActivity extends AppCompatActivity {
 //        Intent intent = new Intent(this, MainActivity.class);
 //        startActivity(intent);
 //        finish();
-        DownHTTP.getVolley(this.url, new VolleyResultListener() {
+        Http_contents();
+    }
+
+    private void Http_contents() {
+        HashMap<String, String> map = new HashMap<>();
+        DownHTTP.postVolley(this.url, map,new VolleyResultListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("====",error+"");
                 Toast.makeText(WelcomeActivity.this,"网络异常",Toast.LENGTH_LONG).show();
+                if(isLoad==false){
+                    Http_contents();
+                }
+                isLoad=true;
             }
             @Override
             public void onResponse(String response) {
-                Log.e("response==",response);
                 Gson gson = new Gson();
                 ZoneTime zoneTime = gson.fromJson(response, ZoneTime.class);
                 String version = zoneTime.getVersion();//新版本号
@@ -88,7 +96,6 @@ public class WelcomeActivity extends AppCompatActivity {
                     for(int i=0;i<list_zone.size();i++){
                         ZoneTime.ZoneTimeBean.ZoneBean zone = list_zone.get(i).getZone();//电视区号
                         if(mZoneNum.equals(zone.getZone())){//如何区号等于当前电视区号
-                            Log.e("======","区号相等");
                             List<ZoneTime.ZoneTimeBean.OneDataBean> one_data = list_zone.get(i).getOne_data();
                             for(int j=0;j<one_data.size();j++){
                                 String time = one_data.get(j).getTime();//起始跟结束时间
@@ -96,22 +103,12 @@ public class WelcomeActivity extends AppCompatActivity {
                                 String video_palce = one_data.get(j).getVideo_palce();//视频的位置
                                 String image_name = one_data.get(j).getFile_name().getImage_name();//图片名称
                                 String video_name = one_data.get(j).getFile_name().getVideo_name();//视频名称
-                                if(TextUtils.isEmpty(ad.trim())&&video_name.equals("null")){//纯图片
-                                    playMode="1";
-                                }else if(!video_name.equals("null")&&TextUtils.isEmpty(ad)){//图片、视频混合
-                                    playMode="2";
-                                }else if(!TextUtils.isEmpty(ad.trim())){//带滚动字体
-                                    playMode="3";
-                                }else{
-                                    playMode="4";
-                                }
                                 /**插入数据库*/
-                                OneDataBean oneDataBean = new OneDataBean(playMode,time, ad, video_palce, image_name, video_name);
+                                OneDataBean oneDataBean = new OneDataBean(time, ad, video_palce, image_name, video_name);
                                 oneDataBean.save();
                             }
                         }
                     }
-                    Log.e("======",down_data);
                     Http_File(down_data);
                 }
             }

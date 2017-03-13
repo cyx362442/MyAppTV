@@ -31,11 +31,6 @@
             android:screenOrientation="landscape">
         </activity>
         <activity
-            android:name=".ThirdActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="landscape">
-        </activity>
-        <activity
             android:name=".VideoFullActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="landscape">
