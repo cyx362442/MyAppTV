@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.duowei.tvshow.contact.FileDir;
 import com.duowei.tvshow.service.BroadService;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -54,10 +57,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(mIntent);
                 break;
             case R.id.view_movie:
+                ArrayList<String> videoPath = FileDir.getVideoPath();
+                if(videoPath.size()<=0){
+                    Toast.makeText(this,"暂无视频",Toast.LENGTH_LONG).show();
+                    return;
+                }
                 mIntent = new Intent(this, VideoFullActivity.class);
                 startActivity(mIntent);
                 break;
             case R.id.view_image:
+                ArrayList<String> imgPath = FileDir.getImgPath();
+                if(imgPath.size()<=0){
+                    Toast.makeText(this,"暂无图片",Toast.LENGTH_LONG).show();
+                    return;
+                }
+                mIntent=new Intent(this,ImageFullActivity.class);
+                startActivity(mIntent);
                 break;
             case R.id.view_setting:
                 mIntent=new Intent(this,SettingActivity.class);

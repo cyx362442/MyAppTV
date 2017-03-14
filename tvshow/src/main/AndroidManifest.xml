@@ -40,9 +40,10 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="landscape">
         </activity>
-        <activity android:name=".ShowActivity"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:screenOrientation="landscape">
+        <activity
+            android:name=".ShowActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="landscape">
         </activity>
 
         <service
@@ -50,6 +51,11 @@
             android:enabled="true"
             android:exported="true">
         </service>
+
+        <activity android:name=".ImageFullActivity"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:screenOrientation="landscape">
+        </activity>
     </application>
 
 </manifest>

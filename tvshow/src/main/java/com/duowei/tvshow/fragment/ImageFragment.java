@@ -82,7 +82,7 @@ public class ImageFragment extends Fragment {
                         }
                     });
                 }
-                mHandler.postDelayed(mRunnable,5000);
+                mHandler.postDelayed(mRunnable,8000);
             }
         },1000);
         super.onStart();
@@ -105,7 +105,13 @@ public class ImageFragment extends Fragment {
             TextView tvPosition=(TextView)view.findViewById(R.id.textView1);
 //            imgPath = new File(mDir + "/Dw/image/" + newsList.get(position));
             imgPath=new File(newsList.get(position));
-            Picasso.with(getContext()).load(imgPath).fit().centerCrop().into(image);
+            Picasso.with(getContext())
+                    .load(imgPath)
+                    .placeholder(R.mipmap.bg)
+                    .error(R.mipmap.bg)
+                    .fit()
+                    .centerInside()
+                    .into(image);
             tvPosition.setText((position+1)+"/"+newsList.size());
             container.addView(view);
             return view;
@@ -124,19 +130,21 @@ public class ImageFragment extends Fragment {
         }
         @Override
         public void finishUpdate(ViewGroup container) {
-//            int position = mViewPager.getCurrentItem();
-//            if (position == 0){
-//                position = DEFAULT_BANNER_SIZE;
-//                mViewPager.setCurrentItem(position,false);
-//            }else if (position == newsList.size() - 1){
-//                position = DEFAULT_BANNER_SIZE - 1;
-//                mViewPager.setCurrentItem(position,false);
-//            }
+            int position = mViewPager.getCurrentItem();
+            if (position == 0){
+                position = DEFAULT_BANNER_SIZE;
+                mViewPager.setCurrentItem(position,false);
+            }else if (position == newsList.size() - 1){
+                position = DEFAULT_BANNER_SIZE - 1;
+                mViewPager.setCurrentItem(position,false);
+            }
         }
     }
     @Override
     public void onDestroy() {
-        mHandler.removeCallbacks(mRunnable);
+        if(mHandler!=null){
+            mHandler.removeCallbacks(mRunnable);
+        }
         super.onDestroy();
     }
 }
