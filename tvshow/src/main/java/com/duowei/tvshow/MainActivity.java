@@ -1,7 +1,5 @@
 package com.duowei.tvshow;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,13 +16,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        findViewById(R.id.view_start).setOnClickListener(this);
         findViewById(R.id.view_image).setOnClickListener(this);
         findViewById(R.id.view_movie).setOnClickListener(this);
         findViewById(R.id.view_setting).setOnClickListener(this);
         findViewById(R.id.view_exit).setOnClickListener(this);
 
-        Intent intent = new Intent(this, ShowActivity.class);
-        startActivity(intent);
+        mIntent = new Intent(this, ShowActivity.class);
+        startActivity(mIntent);
         mIntentService = new Intent(this, BroadService.class);
         startService(mIntentService);
     }
@@ -50,15 +49,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.view_start:
+                mIntent = new Intent(this, ShowActivity.class);
+                startActivity(mIntent);
+                break;
             case R.id.view_movie:
                 mIntent = new Intent(this, VideoFullActivity.class);
                 startActivity(mIntent);
                 break;
             case R.id.view_image:
-                Toast.makeText(this,"view2",Toast.LENGTH_LONG).show();
                 break;
             case R.id.view_setting:
-                Toast.makeText(this,"view3",Toast.LENGTH_LONG).show();
                 mIntent=new Intent(this,SettingActivity.class);
                 startActivity(mIntent);
                 finish();

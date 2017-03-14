@@ -91,7 +91,7 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
                         .setPositiveButton("退出", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                mIntent = new Intent(SettingActivity.this, MainActivity.class);
+                                mIntent = new Intent(SettingActivity.this, WelcomeActivity.class);
                                 startActivity(mIntent);
                                 finish();
                             }
@@ -99,7 +99,7 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
                         .setNegativeButton("取消",null)
                         .create().show();
             }else{
-                mIntent = new Intent(SettingActivity.this, MainActivity.class);
+                mIntent = new Intent(SettingActivity.this, WelcomeActivity.class);
                 startActivity(mIntent);
                 finish();
             }

@@ -56,7 +56,7 @@ public class ShowActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Picasso.with(this).load(R.mipmap.timg4).fit().centerInside().into(mImageView);
+        mLastTime=0;
     }
 
     @Override
@@ -88,10 +88,11 @@ public class ShowActivity extends AppCompatActivity {
                         JCVideoPlayer.releaseAllVideos();
                         removeFragment();//删除上次视频
                             mFile=new File(FileDir.getVideoName()+bean.image_name);//拼接图片路径
-                            if(mFile.exists()){//文件存在得读取
+                            if(mFile.exists()){//文件存在则读取
                                 Picasso.with(ShowActivity.this).load(mFile).fit().centerInside().into(mImageView);
                             }else{//不存在设一张默认的图片
-                                Picasso.with(ShowActivity.this).load(R.mipmap.timg4).fit().centerInside().into(mImageView);
+                                Log.e("======","默认图片……");
+                                Picasso.with(ShowActivity.this).load(R.mipmap.bg).fit().centerInside().into(mImageView);
                             }
                             /**视频文件存在*/
                             if(!bean.video_name.equals("null")){

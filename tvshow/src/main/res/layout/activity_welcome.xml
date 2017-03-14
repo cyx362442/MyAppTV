@@ -6,6 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scaleType="fitXY"
-    android:background="@mipmap/timg4"
+    android:background="@mipmap/bg"
     tools:context="com.duowei.tvshow.WelcomeActivity">
 </RelativeLayout>

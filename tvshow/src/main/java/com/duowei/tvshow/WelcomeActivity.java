@@ -49,7 +49,6 @@ public class WelcomeActivity extends AppCompatActivity {
         mWeid = preferences.getString("weid", "");
         mStoreid=preferences.getString("storeid","");
         mZoneNum=preferences.getString("zoneNum","");
-        Log.e("====",mWurl+":"+mWeid+":"+mStoreid+":"+mZoneNum);
         if(TextUtils.isEmpty(mWurl)||TextUtils.isEmpty(mWeid)||TextUtils.isEmpty(mStoreid)||TextUtils.isEmpty(mZoneNum)){
             mIntent=new Intent(this,SettingActivity.class);
             startActivity(mIntent);
@@ -57,14 +56,6 @@ public class WelcomeActivity extends AppCompatActivity {
             return;
         }
         url ="http://"+mWurl+"/mobile.php?act=module&weid="+mWeid+"&name=light_box_manage&do=GetZoneTime&storeid="+mStoreid;
-//        if(weather==1){
-//           Http_File();
-//        }else{
-//            Http_weather();
-//        }
-//        Intent intent = new Intent(this, MainActivity.class);
-//        startActivity(intent);
-//        finish();
         Http_contents();
     }
 
@@ -74,17 +65,19 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(WelcomeActivity.this,"网络异常",Toast.LENGTH_LONG).show();
-                if(isLoad==false){
+                try {
+                    Thread.sleep(3000);
                     Http_contents();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                isLoad=true;
             }
             @Override
             public void onResponse(String response) {
                 Gson gson = new Gson();
                 ZoneTime zoneTime = gson.fromJson(response, ZoneTime.class);
                 String version = zoneTime.getVersion();//新版本号
-                if(currentVersion.equals(version)){//版本号相同
+                if(currentVersion.equals(version)){//版本号相同直接登录
                     toMainActivity();
                 }else{//版本号不同更新
                     mEdit.putString("version",version);

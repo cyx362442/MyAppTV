@@ -1,1 +1,1 @@
-include ':tvshow'
+include ':tvshow', ':library'

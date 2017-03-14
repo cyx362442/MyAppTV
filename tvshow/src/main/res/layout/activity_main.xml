@@ -13,12 +13,20 @@
     android:padding="5dp"
     tools:context="com.duowei.tvshow.MainActivity">
     <include
-        android:id="@+id/view_movie"
-        layout="@layout/layout_item_view"
+        android:id="@+id/view_start"
+        layout="@layout/layout_item_view_five"
         android:layout_width="220dp"
         android:layout_height="180dp"
         android:layout_centerVertical="true">
         <requestFocus/>
+    </include>
+    <include
+        android:id="@+id/view_movie"
+        layout="@layout/layout_item_view"
+        android:layout_width="220dp"
+        android:layout_height="180dp"
+        android:layout_toRightOf="@+id/view_start"
+        android:layout_centerVertical="true">
     </include>
     <include
         android:id="@+id/view_image"
