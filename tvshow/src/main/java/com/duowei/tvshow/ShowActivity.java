@@ -48,15 +48,15 @@ public class ShowActivity extends AppCompatActivity {
                 R.id.frame07,R.id.frame08,R.id.frame09,};
         ArrayList<String> listImage = FileDir.getImgPath();
         mFile = new File(listImage.get(0));
-        IntentFilter intentFilter = new IntentFilter(ConstsCode.ACTION_START_HEART);
-        mBroadCast = new ServiceBroadCast();
-        registerReceiver(mBroadCast,intentFilter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mLastTime=0;
+        IntentFilter intentFilter = new IntentFilter(ConstsCode.ACTION_START_HEART);
+        mBroadCast = new ServiceBroadCast();
+        registerReceiver(mBroadCast,intentFilter);
     }
 
     @Override
@@ -91,7 +91,6 @@ public class ShowActivity extends AppCompatActivity {
                             if(mFile.exists()){//文件存在则读取
                                 Picasso.with(ShowActivity.this).load(mFile).fit().centerInside().into(mImageView);
                             }else{//不存在设一张默认的图片
-                                Log.e("======","默认图片……");
                                 Picasso.with(ShowActivity.this).load(R.mipmap.bg).fit().centerInside().into(mImageView);
                             }
                             /**视频文件存在*/
@@ -108,7 +107,7 @@ public class ShowActivity extends AppCompatActivity {
                             }
                             if(!TextUtils.isEmpty(bean.ad)){//滚动文字
                                 mTsfv.setMove(true);
-                                mTsfv.setContent(bean.ad);
+                                mTsfv.setContent("    "+bean.ad);
                             }else{
                                 mTsfv.setMove(false);
                                 mTsfv.setContent("");

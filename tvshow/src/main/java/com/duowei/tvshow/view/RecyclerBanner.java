@@ -123,7 +123,7 @@ public class RecyclerBanner extends FrameLayout {
 
     public synchronized void setPlaying(boolean playing){
         if(!isPlaying && playing && adapter != null && adapter.getItemCount() > 2){
-            handler.postDelayed(playTask,3000);
+            handler.postDelayed(playTask,TurnTime);
             isPlaying = true;
         }else if(isPlaying && !playing){
             handler.removeCallbacksAndMessages(null);
@@ -234,7 +234,6 @@ public class RecyclerBanner extends FrameLayout {
             File file = new File(datas.get(position % datas.size()));
             Picasso.with(getContext())
                     .load(file)
-                    .placeholder(R.mipmap.bg)
                     .error(R.mipmap.bg)
                     .fit()
                     .centerInside()
