@@ -52,9 +52,12 @@
             android:exported="true">
         </service>
 
-        <activity android:name=".ImageFullActivity"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:screenOrientation="landscape">
+        <activity
+            android:name=".ImageFullActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="landscape">
+        </activity>
+        <activity android:name=".image_video.PhotoSelectorActivity">
         </activity>
     </application>
 

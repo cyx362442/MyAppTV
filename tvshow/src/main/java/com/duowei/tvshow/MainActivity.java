@@ -7,11 +7,24 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.duowei.tvshow.contact.FileDir;
+import com.duowei.tvshow.image_video.PhotoSelectorActivity;
 import com.duowei.tvshow.service.BroadService;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final int REQUEST_CODE_GET_PHOTOS = 1000;
+    private ArrayList<String> selectedImagesPaths = new ArrayList<String>();
+    /**
+     * 存储视频路径的集合
+     */
+    private ArrayList<String> selectedVedioPaths = new ArrayList<String>();
+    /**
+     * 常量，标识录像选择请求码
+     */
+    private static final int REQUEST_CODE_GET_VEDIOS = 2000;
+    private ArrayList<File> files;
 
     private Intent mIntent;
     private Intent mIntentService;
@@ -71,8 +84,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(this,"暂无图片",Toast.LENGTH_LONG).show();
                     return;
                 }
-                mIntent=new Intent(this,ImageFullActivity.class);
-                startActivity(mIntent);
+                mIntent = new Intent(this, PhotoSelectorActivity.class);
+                //若传入已选中的路径则在选择页面会呈现选中状态
+                mIntent.putStringArrayListExtra("selectedPaths", selectedImagesPaths);
+                startActivityForResult(mIntent, REQUEST_CODE_GET_PHOTOS);
                 break;
             case R.id.view_setting:
                 mIntent=new Intent(this,SettingActivity.class);

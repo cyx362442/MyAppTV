@@ -16,9 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.duowei.tvshow.R;
 import com.duowei.tvshow.contact.FileDir;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -105,13 +105,14 @@ public class ImageFragment extends Fragment {
             TextView tvPosition=(TextView)view.findViewById(R.id.textView1);
 //            imgPath = new File(mDir + "/Dw/image/" + newsList.get(position));
             imgPath=new File(newsList.get(position));
-            Picasso.with(getContext())
-                    .load(imgPath)
-                    .placeholder(R.mipmap.bg)
-                    .error(R.mipmap.bg)
-                    .fit()
-                    .centerInside()
-                    .into(image);
+//            Picasso.with(getContext())
+//                    .load(imgPath)
+//                    .placeholder(R.mipmap.bg)
+//                    .error(R.mipmap.bg)
+//                    .fit()
+//                    .centerInside()
+//                    .into(image);
+            Glide.with(getContext()).load(imgPath).placeholder(R.mipmap.bg).into(image);
             tvPosition.setText((position+1)+"/"+newsList.size());
             container.addView(view);
             return view;
