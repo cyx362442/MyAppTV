@@ -32,7 +32,7 @@ import java.util.List;
  * @description Describe the place where the class needs to pay attention.
  */
 public class RecyclerBanner extends FrameLayout {
-    private final int TurnTime=5*1000;
+    private final int TurnTime=6*1000;
 
     RecyclerView recyclerView;
     LinearLayout linearLayout;
@@ -76,7 +76,7 @@ public class RecyclerBanner extends FrameLayout {
 
     public RecyclerBanner(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        size = (int) (6 * context.getResources().getDisplayMetrics().density + 0.5f);
+        size = (int) (10 * context.getResources().getDisplayMetrics().density + 0.5f);
         defaultDrawable = new GradientDrawable();
         defaultDrawable.setSize(size,size);
         defaultDrawable.setCornerRadius(size);
@@ -215,28 +215,13 @@ public class RecyclerBanner extends FrameLayout {
             img.setScaleType(ImageView.ScaleType.CENTER_CROP);
             img.setLayoutParams(l);
             img.setId(R.id.icon);
-//            img.setOnClickListener(new OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if(onPagerClickListener != null){
-//                        onPagerClickListener.onClick(datas.get(currentIndex % datas.size()));
-//                    }
-//                }
-//            });
             return new RecyclerView.ViewHolder(img) {};
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             ImageView img = (ImageView) holder.itemView.findViewById(R.id.icon);
-//            Glide.with(img.getContext()).load(datas.get(position % datas.size()).getUrl()).placeholder(R.mipmap.ic_launcher).into(img);
             File file = new File(datas.get(position % datas.size()));
-//            Picasso.with(getContext())
-//                    .load(file)
-//                    .error(R.mipmap.bg)
-//                    .fit()
-//                    .centerInside()
-//                    .into(img);
             Glide.with(getContext()).load(file).placeholder(R.mipmap.bg).into(img);
         }
 

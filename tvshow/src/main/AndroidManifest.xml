@@ -57,7 +57,9 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="landscape">
         </activity>
-        <activity android:name=".image_video.PhotoSelectorActivity">
+        <activity android:name=".image_video.PhotoSelectorActivity"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:screenOrientation="landscape">
         </activity>
     </application>
 

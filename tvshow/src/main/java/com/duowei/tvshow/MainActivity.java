@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.duowei.tvshow.contact.FileDir;
+import com.duowei.tvshow.image_video.ImageDir;
 import com.duowei.tvshow.image_video.PhotoSelectorActivity;
 import com.duowei.tvshow.service.BroadService;
 
@@ -75,8 +76,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(this,"暂无视频",Toast.LENGTH_LONG).show();
                     return;
                 }
-                mIntent = new Intent(this, VideoFullActivity.class);
-                startActivity(mIntent);
+                mIntent = new Intent(this, PhotoSelectorActivity.class);
+                //若传入已选中的路径则在选择页面会呈现选中状态
+                mIntent.putStringArrayListExtra("selectedPaths", selectedVedioPaths);
+                mIntent.putExtra("loadType", ImageDir.Type.VEDIO.toString());
+                mIntent.putExtra("sizeLimit", 1 * 1024 * 1024);
+                startActivityForResult(mIntent, REQUEST_CODE_GET_VEDIOS);
                 break;
             case R.id.view_image:
                 ArrayList<String> imgPath = FileDir.getImgPath();
