@@ -5,10 +5,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.duowei.tvshow.MainActivity;
+import com.duowei.tvshow.contact.Consts;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -70,6 +72,10 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
             context.startActivity(intent);
             Activity context = (Activity) ZipExtractorTask.this.context;
             context.finish();
+            SharedPreferences preferences = mContext.getSharedPreferences("Users", Context.MODE_PRIVATE);
+            SharedPreferences.Editor edit = preferences.edit();
+            edit.putString("version", Consts.version);
+            edit.commit();
             mDialog.dismiss();
         }
         if(isCancelled())

@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.duowei.tvshow.bean.OneDataBean;
 import com.duowei.tvshow.contact.ConstsCode;
 import com.duowei.tvshow.contact.FileDir;
@@ -21,6 +20,7 @@ import com.duowei.tvshow.fragment.VideoFragment;
 import com.duowei.tvshow.jcvideoplayer.JCVideoPlayer;
 import com.duowei.tvshow.utils.CurrentTime;
 import com.duowei.tvshow.view.TextSurfaceView;
+import com.squareup.picasso.Picasso;
 
 import org.litepal.crud.DataSupport;
 
@@ -47,7 +47,9 @@ public class ShowActivity extends AppCompatActivity {
                 R.id.frame04,R.id.frame05,R.id.frame06,
                 R.id.frame07,R.id.frame08,R.id.frame09,};
         ArrayList<String> listImage = FileDir.getImgPath();
-        mFile = new File(listImage.get(0));
+        if(listImage.size()>0){
+            mFile = new File(listImage.get(0));
+        }
     }
 
     @Override
@@ -89,11 +91,11 @@ public class ShowActivity extends AppCompatActivity {
                         removeFragment();//删除上次视频
                             mFile=new File(FileDir.getVideoName()+bean.image_name);//拼接图片路径
                             if(mFile.exists()){//文件存在则读取
-//                                Picasso.with(ShowActivity.this).load(mFile).fit().centerInside().into(mImageView);
-                                Glide.with(ShowActivity.this).load(mFile).placeholder(R.mipmap.bg).into(mImageView);
+                                Picasso.with(ShowActivity.this).load(mFile).fit().centerInside().into(mImageView);
+//                                Glide.with(ShowActivity.this).load(mFile).fitCenter().placeholder(R.mipmap.bg).into(mImageView);
                             }else{//不存在设一张默认的图片
-//                                Picasso.with(ShowActivity.this).load(R.mipmap.bg).fit().centerInside().into(mImageView);
-                                Glide.with(ShowActivity.this).load(mFile).placeholder(R.mipmap.bg).into(mImageView);
+                                Picasso.with(ShowActivity.this).load(R.mipmap.bg).fit().centerInside().into(mImageView);
+//                                Glide.with(ShowActivity.this).load(mFile).fitCenter().placeholder(R.mipmap.bg).into(mImageView);
                             }
                             /**视频文件存在*/
                             if(!bean.video_name.equals("null")){

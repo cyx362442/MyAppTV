@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 
-import com.bumptech.glide.Glide;
 import com.duowei.tvshow.R;
+import com.squareup.picasso.Picasso;
 
 /**
  * 图片显示适配器
@@ -95,7 +95,8 @@ public class PhotoSelectorAdapter extends BaseAdapter {
 				viewHolder.photoView.setImageBitmap(ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MINI_KIND));
 			} else {
                 //减1 因为第一个显示的是相机  getItem(position - 1)表示当前位置显示的图片路径
-				Glide.with(context).load(getItem(position - 1)).placeholder(R.mipmap.bg).into(viewHolder.photoView);
+//				Glide.with(context).load(getItem(position - 1)).placeholder(R.mipmap.bg).into(viewHolder.photoView);
+				Picasso.with(context).load(getItem(position-1)).placeholder(R.mipmap.bg).centerInside().fit().into(viewHolder.photoView);
             }
 		}
 		return convertView;

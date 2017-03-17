@@ -14,8 +14,8 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.duowei.tvshow.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
@@ -97,10 +97,12 @@ public class ImageFolderPopWindow extends PopupWindow {
             }
             viewHolder.tvTitle.setText(dir.getDirName()+" ("+dir.getFiles().size()+")");
             if(dir.type== ImageDir.Type.IMAGE){
-                Glide.with(context).load(dir.firstImagePath).placeholder(R.mipmap.bg).into(viewHolder.imgHeader);
+//                Glide.with(context).load(dir.firstImagePath).placeholder(R.mipmap.bg).into(viewHolder.imgHeader);
+                Picasso.with(context).load(dir.firstImagePath).centerInside().fit().placeholder(R.mipmap.bg).into(viewHolder.imgHeader);
                 Log.i("ImageFolderPopWindow","图片类型"+dir.firstImagePath);
             }else {
-                Glide.with(context).load(dir.firstImagePath).placeholder(R.mipmap.bg).into(viewHolder.imgHeader);
+//                Glide.with(context).load(dir.firstImagePath).placeholder(R.mipmap.bg).into(viewHolder.imgHeader);
+                Picasso.with(context).load(dir.firstImagePath).centerInside().fit().placeholder(R.mipmap.bg).into(viewHolder.imgHeader);
                 Log.i("ImageFolderPopWindow","视频类型"+dir.firstImagePath);
             }
 

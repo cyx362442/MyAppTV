@@ -13,6 +13,7 @@ import com.duowei.tvshow.bean.CityCode;
 import com.duowei.tvshow.bean.CityCodes;
 import com.duowei.tvshow.bean.OneDataBean;
 import com.duowei.tvshow.bean.ZoneTime;
+import com.duowei.tvshow.contact.Consts;
 import com.duowei.tvshow.httputils.AsyncUtils;
 import com.duowei.tvshow.httputils.DownHTTP;
 import com.duowei.tvshow.httputils.VolleyResultListener;
@@ -80,8 +81,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 if(currentVersion.equals(version)){//版本号相同直接登录
                     toMainActivity();
                 }else{//版本号不同更新
-                    mEdit.putString("version",version);
-                    mEdit.commit();
+                    Consts.version=version;
                     String down_data = zoneTime.getDown_data();//压缩包下载地址
                     List<ZoneTime.ZoneTimeBean> list_zone = zoneTime.getZone_time();//电视区域信息
                     DataSupport.deleteAll(OneDataBean.class);

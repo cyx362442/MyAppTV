@@ -17,8 +17,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 
-import com.bumptech.glide.Glide;
 import com.duowei.tvshow.R;
+import com.squareup.picasso.Picasso;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -222,7 +223,8 @@ public class RecyclerBanner extends FrameLayout {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             ImageView img = (ImageView) holder.itemView.findViewById(R.id.icon);
             File file = new File(datas.get(position % datas.size()));
-            Glide.with(getContext()).load(file).placeholder(R.mipmap.bg).into(img);
+//            Glide.with(getContext()).load(file).placeholder(R.mipmap.bg).into(img);
+            Picasso.with(getContext()).load(file).placeholder(R.mipmap.bg).centerInside().fit().into(img);
         }
 
         @Override
