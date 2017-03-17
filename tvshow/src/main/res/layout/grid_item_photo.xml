@@ -8,7 +8,7 @@
 
     <ImageView
         android:id="@+id/img_photo"
-        android:layout_width="200dp"
+        android:layout_width="320dp"
         android:layout_height="200dp"
         android:layout_margin="10dp"
         android:layout_centerInParent="true"
@@ -21,6 +21,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@mipmap/dagou"
-        android:visibility="invisible"/>
+        android:src="@mipmap/signred"
+        android:visibility="gone"/>
 </RelativeLayout>

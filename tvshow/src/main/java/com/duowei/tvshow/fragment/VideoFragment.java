@@ -51,7 +51,7 @@ public class VideoFragment extends Fragment {
                 Toast.makeText(getActivity(),"视频文件不存在",Toast.LENGTH_LONG).show();
             }else{
                 mJcVideoPlayer = (JCVideoPlayerStandard) inflate.findViewById(R.id.jcvideoplayer);
-                mJcVideoPlayer.setUp(FileDir.getVideoName()+mVideoname,JCVideoPlayerStandard.SCREEN_WINDOW_TINY, "");
+                mJcVideoPlayer.setUp(FileDir.getVideoName()+mVideoname,JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
             }
         }
         return inflate;

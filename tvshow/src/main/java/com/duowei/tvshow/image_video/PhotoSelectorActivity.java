@@ -17,6 +17,7 @@ import android.widget.PopupWindow;
 import com.duowei.tvshow.ImageFullActivity;
 import com.duowei.tvshow.R;
 import com.duowei.tvshow.VideoFullActivity;
+import com.duowei.tvshow.contact.FileDir;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -147,17 +148,12 @@ public class PhotoSelectorActivity extends AppCompatActivity {
      */
     private void loadImagesList() {
         new Thread(new Runnable() {
-
             @Override
             public void run() {
-                //查询到图片的地址
-                Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        new String[] { MediaStore.Images.Media.DATA, MediaStore.Images.Media.MIME_TYPE },
-                        "" + MediaStore.Images.Media.MIME_TYPE + "=? or " + MediaStore.Images.Media.MIME_TYPE + "=?",
-                        new String[] { "image/jpeg", "image/png" }, MediaStore.Images.Media.DATE_MODIFIED);
-                while (cursor.moveToNext()) {
-                    //获取到图片地址
-                    String filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+                //查询所下载图片的地址
+                ArrayList<String> imgPath = FileDir.getImgPath();
+                for(int i=0;i<imgPath.size();i++){
+                    String filePath=imgPath.get(i);
                     File imageFile = new File(filePath);
                     ImageDir dir = addToDir(imageFile);
                     // 文件中图片的长度
@@ -190,17 +186,13 @@ public class PhotoSelectorActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                Cursor cursor = getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                        new String[] { MediaStore.Video.Media.DATA, MediaStore.Video.Media.MIME_TYPE,MediaStore.Video.Media._ID },
-                        null,null,
-                        MediaStore.Images.Media.DATE_MODIFIED);
-                while (cursor.moveToNext()) {
-                    String filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-                    String id=cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media._ID));
+                //查询所下载视频的地址
+                ArrayList<String> imgPath = FileDir.getVideoPath();
+                for(int i=0;i<imgPath.size();i++){
+                    String filePath=imgPath.get(i);
                     File imageFile = new File(filePath);
                     ImageDir dir = addToDir(imageFile);
-                    //dir.ids.add(id+"");
-                    dir.setType(ImageDir.Type.VEDIO);
+                    // 文件中图片的长度
                     if (dir.files.size() > maxPicSize) {
                         maxPicSize = dir.files.size();
                         currentDir = dir;
@@ -243,7 +235,6 @@ public class PhotoSelectorActivity extends AppCompatActivity {
             imageDir = imageDirsMap.get(parentFilePath);
             imageDir.addFile(imageFile.toString());
         }
-
         return imageDir;
     }
 
@@ -269,6 +260,7 @@ public class PhotoSelectorActivity extends AppCompatActivity {
                     adapter.isCheck[i]=!adapter.isCheck[i];
                 }
                 adapter.notifyDataSetChanged();
+                updateNext();
             }
         });
     }
@@ -292,6 +284,7 @@ public class PhotoSelectorActivity extends AppCompatActivity {
                     adapter.isCheck[i]=!adapter.isCheck[i];
                 }
                 adapter.notifyDataSetChanged();
+                updateNext();
             }
         });
     }
@@ -304,11 +297,11 @@ public class PhotoSelectorActivity extends AppCompatActivity {
         //如果选择了图片,btnNext可以选择，记录选择的数量，设置字体为白色。否则不能选择，设置字体为黑色
         if (getSelectedPictureCont() > 0) {
             btnNext.setSelected(true);
-            btnNext.setText("开始(" + getSelectedPictureCont() + ")");
+            btnNext.setText("开始播放(" + getSelectedPictureCont() + ")");
             btnNext.setTextColor(Color.WHITE);
         } else {
             btnNext.setSelected(false);
-            btnNext.setText("开始");
+            btnNext.setText("开始播放");
             btnNext.setTextColor(Color.BLACK);
         }
     }
