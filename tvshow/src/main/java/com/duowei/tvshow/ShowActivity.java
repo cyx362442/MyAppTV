@@ -46,10 +46,6 @@ public class ShowActivity extends AppCompatActivity {
         mId = new int[]{R.id.frame01,R.id.frame02,R.id.frame03,
                 R.id.frame04,R.id.frame05,R.id.frame06,
                 R.id.frame07,R.id.frame08,R.id.frame09,};
-        ArrayList<String> listImage = FileDir.getImgPath();
-        if(listImage.size()>0){
-            mFile = new File(listImage.get(0));
-        }
     }
 
     @Override

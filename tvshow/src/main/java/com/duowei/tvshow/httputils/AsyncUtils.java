@@ -97,17 +97,17 @@ public class AsyncUtils extends AsyncTask<String, Integer, Integer> {
             case 1:
                 mProgressDialog.setMessage("下载成功，正在解压中……");
                 mProgressDialog.dismiss();
-                deleteDir();
+                deleteDir();//删除原文件，解压出新文件
 
-                ZipExtractorTask task = new ZipExtractorTask(FileDir.getZipVideo(), FileDir.getVideoName(), context, true);
-                task.execute();
+//                ZipExtractorTask task = new ZipExtractorTask(FileDir.getZipVideo(), FileDir.getVideoName(), context, true);
+//                task.execute();
                 break;
             default:
                 break;
         }
     }
     //删除文件夹和文件夹里面的文件
-    public static void deleteDir() {
+    public  void deleteDir() {
         File dir = new File(FileDir.getVideoName());
         if (dir == null || !dir.exists() || !dir.isDirectory())
             return;
@@ -119,5 +119,8 @@ public class AsyncUtils extends AsyncTask<String, Integer, Integer> {
                 deleteDir(); // 递规的方式删除文件夹
         }
 //        dir.delete();// 删除目录本身
+        /**解压出新文件*/
+        ZipExtractorTask task = new ZipExtractorTask(FileDir.getZipVideo(), FileDir.getVideoName(), context, true);
+        task.execute();
     }
 }
