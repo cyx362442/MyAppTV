@@ -10,14 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.duowei.tvshow.bean.OneDataBean;
 import com.duowei.tvshow.contact.ConstsCode;
 import com.duowei.tvshow.contact.FileDir;
 import com.duowei.tvshow.fragment.VideoFragment;
-import com.duowei.tvshow.jcvideoplayer.JCVideoPlayer;
 import com.duowei.tvshow.utils.CurrentTime;
 import com.duowei.tvshow.view.TextSurfaceView;
 import com.squareup.picasso.Picasso;
@@ -27,6 +25,8 @@ import org.litepal.crud.DataSupport;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 
 public class ShowActivity extends AppCompatActivity {
     private ServiceBroadCast mBroadCast;

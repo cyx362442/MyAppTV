@@ -5,9 +5,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,84 +21,54 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.duowei.tvshow.R;
-
-import java.lang.reflect.Constructor;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import fm.jiecao.jcvideoplayer_lib.JCUserActionStandard;
+import fm.jiecao.jcvideoplayer_lib.JCUtils;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+
 /**
- * Created by Administrator on 2017-03-07.
+ * Created by Administrator on 2017-03-20.
  */
 
-public class JCVideoPlayerStandard extends JCVideoPlayer {
+public class MyJVCPlayer extends JCVideoPlayer {
+
+
     protected static Timer DISMISS_CONTROL_VIEW_TIMER;
 
     public ImageView backButton;
-    public ProgressBar bottomProgressBar, loadingProgressBar;//最底部进度条,初始时度加载动画
+    public ProgressBar bottomProgressBar, loadingProgressBar;
     public TextView titleTextView;
     public ImageView thumbImageView;
     public ImageView tinyBackImageView;
 
 
-    protected DismissControlViewTimerTask mDismissControlViewTimerTask;
+    protected MyJVCPlayer.DismissControlViewTimerTask mDismissControlViewTimerTask;
 
 
-    public JCVideoPlayerStandard(Context context) {
+    public MyJVCPlayer(Context context) {
         super(context);
     }
 
-    public JCVideoPlayerStandard(Context context, AttributeSet attrs) {
+    public MyJVCPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     @Override
     public void init(Context context) {
         super.init(context);
-        bottomProgressBar = (ProgressBar) findViewById(R.id.bottom_progress);
-        titleTextView = (TextView) findViewById(R.id.title);
-        backButton = (ImageView) findViewById(R.id.back);
-        thumbImageView = (ImageView) findViewById(R.id.thumb);
-        loadingProgressBar = (ProgressBar) findViewById(R.id.loading);
-        tinyBackImageView = (ImageView) findViewById(R.id.back_tiny);
+        bottomProgressBar = (ProgressBar) findViewById(fm.jiecao.jcvideoplayer_lib.R.id.bottom_progress);
+        titleTextView = (TextView) findViewById(fm.jiecao.jcvideoplayer_lib.R.id.title);
+        backButton = (ImageView) findViewById(fm.jiecao.jcvideoplayer_lib.R.id.back);
+        thumbImageView = (ImageView) findViewById(fm.jiecao.jcvideoplayer_lib.R.id.thumb);
+        loadingProgressBar = (ProgressBar) findViewById(fm.jiecao.jcvideoplayer_lib.R.id.loading);
+        tinyBackImageView = (ImageView) findViewById(fm.jiecao.jcvideoplayer_lib.R.id.back_tiny);
 
         thumbImageView.setOnClickListener(this);
         backButton.setOnClickListener(this);
         tinyBackImageView.setOnClickListener(this);
-    }
 
-    @Override
-    public void startWindowFullscreen() {
-        super.startWindowFullscreen();
-        Log.i(TAG, "startWindowFullscreen " + " [" + this.hashCode() + "] ");
-        hideSupportActionBar(getContext());
-        JCUtils.getAppCompActivity(getContext()).setRequestedOrientation(FULLSCREEN_ORIENTATION);
-
-        ViewGroup vp = (ViewGroup) (JCUtils.scanForActivity(getContext()))//.getWindow().getDecorView();
-                .findViewById(Window.ID_ANDROID_CONTENT);
-        View old = vp.findViewById(FULLSCREEN_ID);
-        if (old != null) {
-            vp.removeView(old);
-        }
-//        ((ViewGroup)JCMediaManager.textureView.getParent()).removeView(JCMediaManager.textureView);
-        textureViewContainer.removeView(JCMediaManager.textureView);
-        try {
-            Constructor<JCVideoPlayerStandard> constructor = (Constructor<JCVideoPlayerStandard>) this.getClass().getConstructor(Context.class);
-            JCVideoPlayer jcVideoPlayer = constructor.newInstance(getContext());
-            jcVideoPlayer.setId(FULLSCREEN_ID);
-            LayoutParams lp = new LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            vp.addView(jcVideoPlayer, lp);
-            jcVideoPlayer.setUp(url, JCVideoPlayerStandard.SCREEN_WINDOW_FULLSCREEN, objects);
-            jcVideoPlayer.setUiWitStateAndScreen(currentState);
-            jcVideoPlayer.addTextureView();
-            JCVideoPlayerManager.setSecondFloor(jcVideoPlayer);
-//            final Animation ra = AnimationUtils.loadAnimation(getContext(), R.anim.start_fullscreen);
-//            jcVideoPlayer.setAnimation(ra);
-            CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -107,22 +77,28 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         if (objects.length == 0) return;
         titleTextView.setText(objects[0].toString());
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
-            fullscreenButton.setImageResource(R.mipmap.jc_shrink);
+            fullscreenButton.setImageResource(fm.jiecao.jcvideoplayer_lib.R.drawable.jc_shrink);
             backButton.setVisibility(View.VISIBLE);
             tinyBackImageView.setVisibility(View.INVISIBLE);
-            changeStartButtonSize((int) getResources().getDimension(R.dimen.jc_start_button_w_h_fullscreen));
+            changeStartButtonSize((int) getResources().getDimension(fm.jiecao.jcvideoplayer_lib.R.dimen.jc_start_button_w_h_fullscreen));
         } else if (currentScreen == SCREEN_LAYOUT_NORMAL
                 || currentScreen == SCREEN_LAYOUT_LIST) {
-            fullscreenButton.setImageResource(R.mipmap.jc_enlarge);
+            fullscreenButton.setImageResource(fm.jiecao.jcvideoplayer_lib.R.drawable.jc_enlarge);
             backButton.setVisibility(View.GONE);
             tinyBackImageView.setVisibility(View.INVISIBLE);
-            changeStartButtonSize((int) getResources().getDimension(R.dimen.jc_start_button_w_h_normal));
+            changeStartButtonSize((int) getResources().getDimension(fm.jiecao.jcvideoplayer_lib.R.dimen.jc_start_button_w_h_normal));
         } else if (currentScreen == SCREEN_WINDOW_TINY) {
             tinyBackImageView.setVisibility(View.VISIBLE);
             setAllControlsVisible(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE,
                     View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
         }
-        startVideo();
+    }
+
+    @Override
+    public void onCompletion() {
+        super.onCompletion();
+        /**强制横屏*/
+        JCUtils.getAppCompActivity(getContext()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     public void changeStartButtonSize(int size) {
@@ -136,7 +112,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
 
     @Override
     public int getLayoutId() {
-        return R.layout.jc_layout_standard;
+        return fm.jiecao.jcvideoplayer_lib.R.layout.jc_layout_standard;
     }
 
     @Override
@@ -163,8 +139,10 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
                 break;
             case CURRENT_STATE_AUTO_COMPLETE:
                 changeUiToCompleteShow();
-                cancelDismissControlViewTimer();
-                bottomProgressBar.setProgress(100);
+//                cancelDismissControlViewTimer();
+//                bottomProgressBar.setProgress(100);
+                /**播放结继续播*/
+                prepareMediaPlayer();
                 break;
             case CURRENT_STATE_PLAYING_BUFFERING_START:
                 changeUiToPlayingBufferingShow();
@@ -176,7 +154,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int id = v.getId();
-        if (id == R.id.surface_container) {
+        if (id == fm.jiecao.jcvideoplayer_lib.R.id.surface_container) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     break;
@@ -195,7 +173,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
                     }
                     break;
             }
-        } else if (id == R.id.bottom_seek_progress) {
+        } else if (id == fm.jiecao.jcvideoplayer_lib.R.id.bottom_seek_progress) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     cancelDismissControlViewTimer();
@@ -212,9 +190,9 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public void onClick(View v) {
         super.onClick(v);
         int i = v.getId();
-        if (i == R.id.thumb) {
+        if (i == fm.jiecao.jcvideoplayer_lib.R.id.thumb) {
             if (TextUtils.isEmpty(url)) {
-                Toast.makeText(getContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(fm.jiecao.jcvideoplayer_lib.R.string.no_url), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (currentState == CURRENT_STATE_NORMAL) {
@@ -227,11 +205,11 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
             } else if (currentState == CURRENT_STATE_AUTO_COMPLETE) {
                 onClickUiToggle();
             }
-        } else if (i == R.id.surface_container) {
+        } else if (i == fm.jiecao.jcvideoplayer_lib.R.id.surface_container) {
             startDismissControlViewTimer();
-        } else if (i == R.id.back) {
+        } else if (i == fm.jiecao.jcvideoplayer_lib.R.id.back) {
             backPress();
-        } else if (i == R.id.back_tiny) {
+        } else if (i == fm.jiecao.jcvideoplayer_lib.R.id.back_tiny) {
             backPress();
         }
     }
@@ -241,8 +219,8 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public void showWifiDialog() {
         super.showWifiDialog();
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage(getResources().getString(R.string.tips_not_wifi));
-        builder.setPositiveButton(getResources().getString(R.string.tips_not_wifi_confirm), new DialogInterface.OnClickListener() {
+        builder.setMessage(getResources().getString(fm.jiecao.jcvideoplayer_lib.R.string.tips_not_wifi));
+        builder.setPositiveButton(getResources().getString(fm.jiecao.jcvideoplayer_lib.R.string.tips_not_wifi_confirm), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -250,7 +228,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
                 WIFI_TIP_DIALOG_SHOWED = true;
             }
         });
-        builder.setNegativeButton(getResources().getString(R.string.tips_not_wifi_cancel), new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getResources().getString(fm.jiecao.jcvideoplayer_lib.R.string.tips_not_wifi_cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -602,13 +580,14 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
 
     public void updateStartImage() {
         if (currentState == CURRENT_STATE_PLAYING) {
-            startButton.setImageResource(R.drawable.jc_click_pause_selector);
+            startButton.setImageResource(fm.jiecao.jcvideoplayer_lib.R.drawable.jc_click_pause_selector);
         } else if (currentState == CURRENT_STATE_ERROR) {
-            startButton.setImageResource(R.drawable.jc_click_error_selector);
+            startButton.setImageResource(fm.jiecao.jcvideoplayer_lib.R.drawable.jc_click_error_selector);
         } else {
-            startButton.setImageResource(R.drawable.jc_click_play_selector);
+            startButton.setImageResource(fm.jiecao.jcvideoplayer_lib.R.drawable.jc_click_play_selector);
         }
     }
+
 
     protected Dialog mProgressDialog;
     protected ProgressBar mDialogProgressBar;
@@ -620,12 +599,12 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public void showProgressDialog(float deltaX, String seekTime, int seekTimePosition, String totalTime, int totalTimeDuration) {
         super.showProgressDialog(deltaX, seekTime, seekTimePosition, totalTime, totalTimeDuration);
         if (mProgressDialog == null) {
-            View localView = LayoutInflater.from(getContext()).inflate(R.layout.jc_dialog_progress, null);
-            mDialogProgressBar = ((ProgressBar) localView.findViewById(R.id.duration_progressbar));
-            mDialogSeekTime = ((TextView) localView.findViewById(R.id.tv_current));
-            mDialogTotalTime = ((TextView) localView.findViewById(R.id.tv_duration));
-            mDialogIcon = ((ImageView) localView.findViewById(R.id.duration_image_tip));
-            mProgressDialog = new Dialog(getContext(), R.style.jc_style_dialog_progress);
+            View localView = LayoutInflater.from(getContext()).inflate(fm.jiecao.jcvideoplayer_lib.R.layout.jc_dialog_progress, null);
+            mDialogProgressBar = ((ProgressBar) localView.findViewById(fm.jiecao.jcvideoplayer_lib.R.id.duration_progressbar));
+            mDialogSeekTime = ((TextView) localView.findViewById(fm.jiecao.jcvideoplayer_lib.R.id.tv_current));
+            mDialogTotalTime = ((TextView) localView.findViewById(fm.jiecao.jcvideoplayer_lib.R.id.tv_duration));
+            mDialogIcon = ((ImageView) localView.findViewById(fm.jiecao.jcvideoplayer_lib.R.id.duration_image_tip));
+            mProgressDialog = new Dialog(getContext(), fm.jiecao.jcvideoplayer_lib.R.style.jc_style_dialog_progress);
             mProgressDialog.setContentView(localView);
             mProgressDialog.getWindow().addFlags(Window.FEATURE_ACTION_BAR);
             mProgressDialog.getWindow().addFlags(32);
@@ -643,9 +622,9 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         mDialogTotalTime.setText(" / " + totalTime);
         mDialogProgressBar.setProgress(totalTimeDuration <= 0 ? 0 : (seekTimePosition * 100 / totalTimeDuration));
         if (deltaX > 0) {
-            mDialogIcon.setBackgroundResource(R.mipmap.jc_forward_icon);
+            mDialogIcon.setBackgroundResource(fm.jiecao.jcvideoplayer_lib.R.drawable.jc_forward_icon);
         } else {
-            mDialogIcon.setBackgroundResource(R.mipmap.jc_backward_icon);
+            mDialogIcon.setBackgroundResource(fm.jiecao.jcvideoplayer_lib.R.drawable.jc_backward_icon);
         }
         onCLickUiToggleToClear();
     }
@@ -667,11 +646,11 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public void showVolumeDialog(float deltaY, int volumePercent) {
         super.showVolumeDialog(deltaY, volumePercent);
         if (mVolumeDialog == null) {
-            View localView = LayoutInflater.from(getContext()).inflate(R.layout.jc_dialog_volume, null);
-            mDialogVolumeImageView = ((ImageView) localView.findViewById(R.id.volume_image_tip));
-            mDialogVolumeTextView = ((TextView) localView.findViewById(R.id.tv_volume));
-            mDialogVolumeProgressBar = ((ProgressBar) localView.findViewById(R.id.volume_progressbar));
-            mVolumeDialog = new Dialog(getContext(), R.style.jc_style_dialog_progress);
+            View localView = LayoutInflater.from(getContext()).inflate(fm.jiecao.jcvideoplayer_lib.R.layout.jc_dialog_volume, null);
+            mDialogVolumeImageView = ((ImageView) localView.findViewById(fm.jiecao.jcvideoplayer_lib.R.id.volume_image_tip));
+            mDialogVolumeTextView = ((TextView) localView.findViewById(fm.jiecao.jcvideoplayer_lib.R.id.tv_volume));
+            mDialogVolumeProgressBar = ((ProgressBar) localView.findViewById(fm.jiecao.jcvideoplayer_lib.R.id.volume_progressbar));
+            mVolumeDialog = new Dialog(getContext(), fm.jiecao.jcvideoplayer_lib.R.style.jc_style_dialog_progress);
             mVolumeDialog.setContentView(localView);
             mVolumeDialog.getWindow().addFlags(8);
             mVolumeDialog.getWindow().addFlags(32);
@@ -685,9 +664,9 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
             mVolumeDialog.show();
         }
         if (volumePercent <= 0) {
-            mDialogVolumeImageView.setBackgroundResource(R.mipmap.jc_close_volume);
+            mDialogVolumeImageView.setBackgroundResource(fm.jiecao.jcvideoplayer_lib.R.drawable.jc_close_volume);
         } else {
-            mDialogVolumeImageView.setBackgroundResource(R.mipmap.jc_add_volume);
+            mDialogVolumeImageView.setBackgroundResource(fm.jiecao.jcvideoplayer_lib.R.drawable.jc_add_volume);
         }
         if (volumePercent > 100) {
             volumePercent = 100;
@@ -715,10 +694,10 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public void showBrightnessDialog(int brightnessPercent) {
         super.showBrightnessDialog(brightnessPercent);
         if (mBrightnessDialog == null) {
-            View localView = LayoutInflater.from(getContext()).inflate(R.layout.jc_dialog_brightness, null);
-            mDialogBrightnessTextView = ((TextView) localView.findViewById(R.id.tv_brightness));
-            mDialogBrightnessProgressBar = ((ProgressBar) localView.findViewById(R.id.brightness_progressbar));
-            mBrightnessDialog = new Dialog(getContext(), R.style.jc_style_dialog_progress);
+            View localView = LayoutInflater.from(getContext()).inflate(fm.jiecao.jcvideoplayer_lib.R.layout.jc_dialog_brightness, null);
+            mDialogBrightnessTextView = ((TextView) localView.findViewById(fm.jiecao.jcvideoplayer_lib.R.id.tv_brightness));
+            mDialogBrightnessProgressBar = ((ProgressBar) localView.findViewById(fm.jiecao.jcvideoplayer_lib.R.id.brightness_progressbar));
+            mBrightnessDialog = new Dialog(getContext(), fm.jiecao.jcvideoplayer_lib.R.style.jc_style_dialog_progress);
             mBrightnessDialog.setContentView(localView);
             mBrightnessDialog.getWindow().addFlags(Window.FEATURE_ACTION_BAR);
             mBrightnessDialog.getWindow().addFlags(32);
@@ -753,7 +732,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public void startDismissControlViewTimer() {
         cancelDismissControlViewTimer();
         DISMISS_CONTROL_VIEW_TIMER = new Timer();
-        mDismissControlViewTimerTask = new DismissControlViewTimerTask();
+        mDismissControlViewTimerTask = new MyJVCPlayer.DismissControlViewTimerTask();
         DISMISS_CONTROL_VIEW_TIMER.schedule(mDismissControlViewTimerTask, 2500);
     }
 

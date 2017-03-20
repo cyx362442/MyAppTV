@@ -5,15 +5,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.duowei.tvshow.contact.FileDir;
-import com.duowei.tvshow.jcvideoplayer.JCVideoPlayer;
-import com.duowei.tvshow.jcvideoplayer.JCVideoPlayerStandard;
+import com.duowei.tvshow.jcvideoplayer.MyJVCPlayer;
 
 import java.util.ArrayList;
 
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+
 public class VideoFullActivity extends AppCompatActivity {
     private ArrayList<String> videoPath;
-    private JCVideoPlayerStandard mJcVideoPlayer;
+    private MyJVCPlayer mJcVideoPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,9 +29,9 @@ public class VideoFullActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mJcVideoPlayer = (JCVideoPlayerStandard) findViewById(R.id.jcvideoplayer);
+        mJcVideoPlayer = (MyJVCPlayer) findViewById(R.id.jcvideoplayer);
         //从第一部开始播放
-        mJcVideoPlayer.setUp(videoPath.get(0), JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+        mJcVideoPlayer.setUp(videoPath.get(0), MyJVCPlayer.SCREEN_LAYOUT_NORMAL, "");
     }
     @Override
     protected void onPause() {

@@ -2,6 +2,7 @@ package com.duowei.tvshow;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -30,21 +31,27 @@ public class WelcomeActivity extends AppCompatActivity {
     private SharedPreferences.Editor mEdit;
     private String currentVersion="";//当前版本
     private String mZoneNum="";
-//    private String url="http://ai.wxdw.top/mobile.php?act=module&weid=175&name=light_box_manage&do=GetZoneTime&storeid=30";
     private String url;
     private String mWeid;
     private String mWurl;
     private String mStoreid;//门店ID
     private Intent mIntent;
-    private  boolean isLoad=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+            Toast.makeText(this,"当前内存卡不可用",Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (getPreferData()) return;
+        Http_contents();
+    }
+
+    private boolean getPreferData() {
         SharedPreferences preferences = getSharedPreferences("Users", Context.MODE_PRIVATE);
         mEdit = preferences.edit();
-        int weather = preferences.getInt("weather", 0);
         currentVersion = preferences.getString("version", "");
         mWurl = preferences.getString("wurl", "");
         mWeid = preferences.getString("weid", "");
@@ -54,10 +61,10 @@ public class WelcomeActivity extends AppCompatActivity {
             mIntent=new Intent(this,SettingActivity.class);
             startActivity(mIntent);
             finish();
-            return;
+            return true;
         }
         url ="http://"+mWurl+"/mobile.php?act=module&weid="+mWeid+"&name=light_box_manage&do=GetZoneTime&storeid="+mStoreid;
-        Http_contents();
+        return false;
     }
 
     private void Http_contents() {
@@ -65,10 +72,12 @@ public class WelcomeActivity extends AppCompatActivity {
         DownHTTP.postVolley(this.url, map,new VolleyResultListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(WelcomeActivity.this,"网络异常",Toast.LENGTH_LONG).show();
+                Toast.makeText(WelcomeActivity.this,"网络连接失败",Toast.LENGTH_LONG).show();
                 try {
                     Thread.sleep(3000);
-                    Http_contents();
+                    mIntent=new Intent(WelcomeActivity.this,SettingActivity.class);
+                    startActivity(mIntent);
+                    finish();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -102,33 +111,9 @@ public class WelcomeActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    Log.e("=====",down_data);
                     Http_File(down_data);
                 }
-            }
-        });
-    }
-
-    private void Http_weather() {
-        DownHTTP.getVolley2("http://7xpqoi.com1.z0.glb.clouddn.com/citycode.txt", new VolleyResultListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-            @Override
-            public void onResponse(String response) {
-                Gson gson = new Gson();
-                CityCode cityCode = gson.fromJson(response, CityCode.class);
-                List<CityCode.ZoneBeanXX> zone = cityCode.getZone();
-                DataSupport.deleteAll(CityCodes.class);
-                for(int i=0;i<zone.size();i++){
-                    List<CityCode.ZoneBeanXX.ZoneBeanX> zone1 = zone.get(i).getZone();
-                    for(int j=0;j<zone1.size();j++){
-                        List<CityCodes> listcode = zone1.get(j).getZone();
-                        DataSupport.saveAll(listcode);
-                    }
-                }
-                mEdit.putInt("weather",1);
-                mEdit.commit();
-//                Http_File();
             }
         });
     }

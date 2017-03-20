@@ -24,6 +24,12 @@
             android:entryValues="@array/list_preference"
             android:dialogTitle="电视区号" />
     </PreferenceCategory>
+    <PreferenceScreen
+
+        android:key="dect_settings"
+        android:title="确定"
+        android:summary="(请确定信息填写完整、正确)" >
+    </PreferenceScreen>
     <!--<PreferenceCategory android:title="Second Category">-->
     <!--<EditTextPreference-->
         <!--android:key="edittext_key"-->

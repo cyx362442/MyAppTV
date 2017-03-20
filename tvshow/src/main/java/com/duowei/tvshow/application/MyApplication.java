@@ -13,6 +13,7 @@ public class MyApplication extends LitePalApplication {
     public void onCreate() {
         super.onCreate();
         MyVolley.init(this);
-        LeakCanary.install(this);
+        //检测内存泄露
+//        LeakCanary.install(this);
     }
 }

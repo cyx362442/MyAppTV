@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +13,16 @@ import android.widget.Toast;
 
 import com.duowei.tvshow.R;
 import com.duowei.tvshow.contact.FileDir;
-import com.duowei.tvshow.jcvideoplayer.JCVideoPlayerStandard;
+import com.duowei.tvshow.jcvideoplayer.MyJVCPlayer;
 
 import java.io.File;
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class VideoFragment extends Fragment {
 
-    private JCVideoPlayerStandard mJcVideoPlayer;
+    private MyJVCPlayer mJcVideoPlayer;
     private String mVideoname;
 
     @Override
@@ -50,8 +48,9 @@ public class VideoFragment extends Fragment {
             if(!file.exists()){
                 Toast.makeText(getActivity(),"视频文件不存在",Toast.LENGTH_LONG).show();
             }else{
-                mJcVideoPlayer = (JCVideoPlayerStandard) inflate.findViewById(R.id.jcvideoplayer);
-                mJcVideoPlayer.setUp(FileDir.getVideoName()+mVideoname,JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+                mJcVideoPlayer = (MyJVCPlayer) inflate.findViewById(R.id.jcvideoplayer);
+                mJcVideoPlayer.setUp(FileDir.getVideoName()+mVideoname,MyJVCPlayer.SCREEN_LAYOUT_NORMAL, "");
+                mJcVideoPlayer.startVideo();
             }
         }
         return inflate;
