@@ -42,7 +42,7 @@ public final class DownHTTP {
 		{
             protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
                 return params;
-            };
+            }
 		};
 		
 		// 将http请求加入队列，volley库会开始执行请求

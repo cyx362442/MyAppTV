@@ -67,6 +67,7 @@ public class WelcomeActivity extends AppCompatActivity {
         return false;
     }
 
+    int num=0;
     private void Http_contents() {
         HashMap<String, String> map = new HashMap<>();
         DownHTTP.postVolley(this.url, map,new VolleyResultListener() {
@@ -75,9 +76,13 @@ public class WelcomeActivity extends AppCompatActivity {
                 Toast.makeText(WelcomeActivity.this,"网络连接失败",Toast.LENGTH_LONG).show();
                 try {
                     Thread.sleep(3000);
-                    mIntent=new Intent(WelcomeActivity.this,SettingActivity.class);
-                    startActivity(mIntent);
-                    finish();
+                    num++;
+                    Http_contents();
+                    if(num>3){
+                        mIntent=new Intent(WelcomeActivity.this,SettingActivity.class);
+                        startActivity(mIntent);
+                        finish();
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -92,6 +97,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 }else{//版本号不同更新
                     Consts.version=version;
                     String down_data = zoneTime.getDown_data();//压缩包下载地址
+                    Log.e("=====",down_data);
                     List<ZoneTime.ZoneTimeBean> list_zone = zoneTime.getZone_time();//电视区域信息
                     DataSupport.deleteAll(OneDataBean.class);
                     /**找到该电视区号对应的数据信息集*/

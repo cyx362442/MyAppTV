@@ -109,18 +109,20 @@ public class AsyncUtils extends AsyncTask<String, Integer, Integer> {
     //删除文件夹和文件夹里面的文件
     public  void deleteDir() {
         File dir = new File(FileDir.getVideoName());
-        if (dir == null || !dir.exists() || !dir.isDirectory())
-            return;
-
-        for (File file : dir.listFiles()) {
-            if (file.isFile())
-                file.delete(); // 删除所有文件
-            else if (file.isDirectory())
-                deleteDir(); // 递规的方式删除文件夹
+        if (dir == null || !dir.exists() || !dir.isDirectory()){
+            /**解压出新文件*/
+            ZipExtractorTask task = new ZipExtractorTask(FileDir.getZipVideo(), FileDir.getVideoName(), context, true);
+            task.execute();
+        }else{
+            for (File file : dir.listFiles()) {
+                if (file.isFile())
+                    file.delete(); // 删除所有文件
+                else if (file.isDirectory())
+                    deleteDir(); // 递规的方式删除文件夹
+            }
+            /**解压出新文件*/
+            ZipExtractorTask task = new ZipExtractorTask(FileDir.getZipVideo(), FileDir.getVideoName(), context, true);
+            task.execute();
         }
-//        dir.delete();// 删除目录本身
-        /**解压出新文件*/
-        ZipExtractorTask task = new ZipExtractorTask(FileDir.getZipVideo(), FileDir.getVideoName(), context, true);
-        task.execute();
     }
 }
