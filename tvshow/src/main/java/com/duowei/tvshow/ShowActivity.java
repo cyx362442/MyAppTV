@@ -16,6 +16,7 @@ import com.duowei.tvshow.bean.OneDataBean;
 import com.duowei.tvshow.contact.ConstsCode;
 import com.duowei.tvshow.contact.FileDir;
 import com.duowei.tvshow.fragment.VideoFragment;
+import com.duowei.tvshow.jcvideoplayer.MyJVCPlayer;
 import com.duowei.tvshow.utils.CurrentTime;
 import com.duowei.tvshow.view.TextSurfaceView;
 import com.squareup.picasso.Picasso;
@@ -59,7 +60,7 @@ public class ShowActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        JCVideoPlayer.releaseAllVideos();
+        MyJVCPlayer.releaseAllVideos();
         super.onStop();
     }
 

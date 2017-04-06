@@ -1,12 +1,17 @@
 package com.duowei.tvshow;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -15,13 +20,17 @@ import com.duowei.tvshow.bean.CityCodes;
 import com.duowei.tvshow.bean.OneDataBean;
 import com.duowei.tvshow.bean.ZoneTime;
 import com.duowei.tvshow.contact.Consts;
+import com.duowei.tvshow.contact.FileDir;
 import com.duowei.tvshow.httputils.AsyncUtils;
 import com.duowei.tvshow.httputils.DownHTTP;
+import com.duowei.tvshow.httputils.DownLoad;
 import com.duowei.tvshow.httputils.VolleyResultListener;
+import com.duowei.tvshow.httputils.ZipExtractorTask;
 import com.google.gson.Gson;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,16 +45,23 @@ public class WelcomeActivity extends AppCompatActivity {
     private String mWurl;
     private String mStoreid;//门店ID
     private Intent mIntent;
+    private LinearLayout mLlLoad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        mLlLoad = (LinearLayout) findViewById(R.id.linearLayout);
+
         if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
             Toast.makeText(this,"当前内存卡不可用",Toast.LENGTH_LONG).show();
             return;
         }
         if (getPreferData()) return;
+
+        //注册广播接收器
+        IntentFilter filter = new IntentFilter( DownloadManager.ACTION_DOWNLOAD_COMPLETE ) ;
+        registerReceiver( receiver , filter ) ;
         Http_contents();
     }
 
@@ -75,7 +91,7 @@ public class WelcomeActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(WelcomeActivity.this,"网络连接失败",Toast.LENGTH_LONG).show();
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(2000);
                     num++;
                     Http_contents();
                     if(num>3){
@@ -108,7 +124,7 @@ public class WelcomeActivity extends AppCompatActivity {
                             for(int j=0;j<one_data.size();j++){
                                 String time = one_data.get(j).getTime();//起始跟结束时间
                                 String ad = one_data.get(j).getAd();//动态广告词
-                                String video_palce = one_data.get(j).getVideo_palce();//视频的位置
+                                String video_palce = one_data.get(j).getVideo_palce( );//视频的位置
                                 String image_name = one_data.get(j).getFile_name().getImage_name();//图片名称
                                 String video_name = one_data.get(j).getFile_name().getVideo_name();//视频名称
                                 /**插入数据库*/
@@ -118,7 +134,8 @@ public class WelcomeActivity extends AppCompatActivity {
                         }
                     }
                     Log.e("=====",down_data);
-                    Http_File(down_data);
+//                    Http_File(down_data);
+                   DownLoad.getInstance().startLoad(WelcomeActivity.this,down_data);
                 }
             }
         });
@@ -136,5 +153,52 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    /**
+     * 广播接受器, 下载完成监听器
+     */
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction() ;
+            if( action.equals( DownloadManager.ACTION_DOWNLOAD_COMPLETE  )){
+                //下载完成了
+                mLlLoad.setVisibility(View.GONE);
+                deleteDir();
+            }
+            if( action.equals( DownloadManager.ACTION_NOTIFICATION_CLICKED )){
+                //广播被点击了
+//                Toast.makeText( MainActivity.this , "广播被点击了" ,  Toast.LENGTH_SHORT ).show() ;
+            }
+        }
+    };
+
+    //删除文件夹和文件夹里面的文件
+    public  void deleteDir() {
+        File dir = new File(FileDir.getVideoName());
+        if (dir == null || !dir.exists() || !dir.isDirectory()){
+            /**解压出新文件*/
+            ZipExtractorTask task = new ZipExtractorTask(FileDir.getZipVideo(), FileDir.getVideoName(), this, true);
+            task.execute();
+        }else{
+            for (File file : dir.listFiles()) {
+                if (file.isFile())
+                    file.delete(); // 删除所有文件
+                else if (file.isDirectory())
+                    deleteDir(); // 递规的方式删除文件夹
+            }
+            /**解压出新文件*/
+            ZipExtractorTask task = new ZipExtractorTask(FileDir.getZipVideo(), FileDir.getVideoName(), this, true);
+            task.execute();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mIntent=new Intent(this,MainActivity.class);
+        startActivity(mIntent);
+        finish();
     }
 }

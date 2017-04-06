@@ -8,4 +8,19 @@
     android:scaleType="fitXY"
     android:background="@mipmap/bg"
     tools:context="com.duowei.tvshow.WelcomeActivity">
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="文件下载中，请耐心等待……"/>
+    </LinearLayout>
 </RelativeLayout>

@@ -5,11 +5,11 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center"
-    android:background="#2D2D2D"
+    android:background="#000000"
     tools:context="com.duowei.tvshow.VideoFullActivity">
-    <com.duowei.tvshow.jcvideoplayer.JCVideoPlayerStandard
+    <com.duowei.tvshow.jcvideoplayer.MyJVCPlayer
         android:id="@+id/jcvideoplayer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-    </com.duowei.tvshow.jcvideoplayer.JCVideoPlayerStandard>
+    </com.duowei.tvshow.jcvideoplayer.MyJVCPlayer>
 </RelativeLayout>

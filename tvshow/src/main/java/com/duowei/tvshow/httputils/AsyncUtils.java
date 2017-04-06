@@ -3,6 +3,7 @@ package com.duowei.tvshow.httputils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.duowei.tvshow.contact.FileDir;
@@ -11,6 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -48,24 +50,33 @@ public class AsyncUtils extends AsyncTask<String, Integer, Integer> {
         FileOutputStream fos = null;
         try {
             URL url = new URL(params[0]);
-            URLConnection urlConnection = url.openConnection();//开启连接
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();//开启连接
             urlConnection.connect();
+            urlConnection.setConnectTimeout(5*1000);  //设置超时时间
             lenghtOfFile = urlConnection.getContentLength();//获取下载文件的总长度
             is = urlConnection.getInputStream();// 开启流
             fos = new FileOutputStream(fileZip);// 开启写的流
             byte[] bytes = new byte[1024];
             while ((count = is.read(bytes)) != -1) {
-                total += count;
                 fos.write(bytes, 0, count);
+                total += count;
                 publishProgress((int)(total*50/lenghtOfFile));
             }
             fos.flush();
-            fos.close();
-            is.close();
+//            fos.close();
+//            is.close();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                fos.close();
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         if (lenghtOfFile == 0 || total < lenghtOfFile) {
             result = -1;
@@ -98,9 +109,6 @@ public class AsyncUtils extends AsyncTask<String, Integer, Integer> {
                 mProgressDialog.setMessage("下载成功，正在解压中……");
                 mProgressDialog.dismiss();
                 deleteDir();//删除原文件，解压出新文件
-
-//                ZipExtractorTask task = new ZipExtractorTask(FileDir.getZipVideo(), FileDir.getVideoName(), context, true);
-//                task.execute();
                 break;
             default:
                 break;
