@@ -16,6 +16,8 @@ import android.view.KeyEvent;
 
 import com.duowei.tvshow.contact.Consts;
 
+import org.litepal.util.Const;
+
 public class SettingActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
     private EditTextPreference mEtPreference1;
     private EditTextPreference mEtPreference2;
@@ -81,34 +83,6 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
         mEdit.commit();
     }
 
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if(keyCode==KeyEvent.KEYCODE_BACK){
-//            SharedPreferences spf = getPreferenceScreen().getSharedPreferences();
-//            if(spf.getString(Consts.LIST_KEY,"").equals("")||spf.getString("edittext_key1","").equals("")||
-//                    spf.getString("edittext_key2","").equals("")||spf.getString("edittext_key3","").equals("")){
-//                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-//                        dialog.setTitle("提示")
-//                        .setMessage("设置信息未填完整，是否马上退出")
-//                        .setPositiveButton("退出", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                mIntent = new Intent(SettingActivity.this, WelcomeActivity.class);
-//                                startActivity(mIntent);
-//                                finish();
-//                            }
-//                        })
-//                        .setNegativeButton("取消",null)
-//                        .create().show();
-//            }else{
-//                mIntent = new Intent(SettingActivity.this, WelcomeActivity.class);
-//                startActivity(mIntent);
-//                finish();
-//            }
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
-
     @Override
     public boolean onPreferenceClick(Preference preference) {
         SharedPreferences spf = getPreferenceScreen().getSharedPreferences();
@@ -116,7 +90,7 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
                 spf.getString("edittext_key2","").equals("")||spf.getString("edittext_key3","").equals("")){
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
             dialog.setTitle("提示")
-                    .setMessage("设置信息未填完整，是否马上退出")
+                    .setMessage("设置信息未填完整，是否退出？")
                     .setPositiveButton("退出", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -128,6 +102,11 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
                     .setNegativeButton("取消",null)
                     .create().show();
         }else{
+            SharedPreferences preferences = getSharedPreferences("Users", Context.MODE_PRIVATE);
+            SharedPreferences.Editor edit = preferences.edit();
+            edit.putString("version", "0");
+            edit.commit();
+
             mIntent = new Intent(SettingActivity.this, WelcomeActivity.class);
             startActivity(mIntent);
             finish();

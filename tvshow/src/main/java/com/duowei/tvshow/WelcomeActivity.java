@@ -73,6 +73,11 @@ public class WelcomeActivity extends AppCompatActivity {
         }
         if (getPreferData()) return;
         Http_contents();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         //注册广播接收器
         IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE) ;
         registerReceiver(receiver,filter) ;
@@ -102,6 +107,7 @@ public class WelcomeActivity extends AppCompatActivity {
         DownHTTP.postVolley(this.url, map,new VolleyResultListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.e("=====",error+"sada");
                 Toast.makeText(WelcomeActivity.this,"网络连接失败",Toast.LENGTH_LONG).show();
                 try {
                     Thread.sleep(2000);
@@ -110,9 +116,7 @@ public class WelcomeActivity extends AppCompatActivity {
                         Http_contents();
                     }
                     if(num==2){
-                        mIntent=new Intent(WelcomeActivity.this,MainActivity.class);
-                        startActivity(mIntent);
-                        finish();
+                        toMainActivity();
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -120,6 +124,7 @@ public class WelcomeActivity extends AppCompatActivity {
             }
             @Override
             public void onResponse(String response) {
+                Log.e("=====",response);
                 Gson gson = new Gson();
                 ZoneTime zoneTime = gson.fromJson(response, ZoneTime.class);
                 String version = zoneTime.getVersion();//新版本号
@@ -158,12 +163,13 @@ public class WelcomeActivity extends AppCompatActivity {
     private void startDownLoad(String down_data) {
         mDownloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(down_data));
+        request.allowScanningByMediaScanner();
         //设置下载中通知栏标题
         request.setTitle("文件下载");
         //设置下载中通知栏介绍
         request.setDescription("下载中……");
         //下载完成后显示通知栏提示
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
         //每个文件都有一个requestId，可以根据这个id做其他操作
         mRequestId = mDownloadManager.enqueue(request);
     }
@@ -199,15 +205,23 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-        mDownloadManager.remove(mRequestId);
+        if(mRequestId>0){
+            mDownloadManager.remove(mRequestId);
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(receiver);
+//        unregisterReceiver(receiver);
     }
 
     @Override
