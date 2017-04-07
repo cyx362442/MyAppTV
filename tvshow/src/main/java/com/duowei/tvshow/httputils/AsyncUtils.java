@@ -63,8 +63,6 @@ public class AsyncUtils extends AsyncTask<String, Integer, Integer> {
                 publishProgress((int)(total*50/lenghtOfFile));
             }
             fos.flush();
-//            fos.close();
-//            is.close();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -72,8 +70,12 @@ public class AsyncUtils extends AsyncTask<String, Integer, Integer> {
         }
         finally {
             try {
-                fos.close();
-                is.close();
+                if(fos!=null){
+                    fos.close();
+                }
+                if(is!=null){
+                    is.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -60,8 +60,8 @@ public class WelcomeActivity extends AppCompatActivity {
         if (getPreferData()) return;
 
         //注册广播接收器
-        IntentFilter filter = new IntentFilter( DownloadManager.ACTION_DOWNLOAD_COMPLETE ) ;
-        registerReceiver( receiver , filter ) ;
+//        IntentFilter filter = new IntentFilter( DownloadManager.ACTION_DOWNLOAD_COMPLETE ) ;
+//        registerReceiver( receiver , filter ) ;
         Http_contents();
     }
 
@@ -115,7 +115,6 @@ public class WelcomeActivity extends AppCompatActivity {
                 }else{//版本号不同更新
                     Consts.version=version;
                     String down_data = zoneTime.getDown_data();//压缩包下载地址
-                    Log.e("=====",down_data);
                     List<ZoneTime.ZoneTimeBean> list_zone = zoneTime.getZone_time();//电视区域信息
                     DataSupport.deleteAll(OneDataBean.class);
                     /**找到该电视区号对应的数据信息集*/
@@ -136,8 +135,8 @@ public class WelcomeActivity extends AppCompatActivity {
                         }
                     }
                     Log.e("=====",down_data);
-//                    Http_File(down_data);
-                   DownLoad.getInstance().startLoad(WelcomeActivity.this,down_data);
+                    Http_File(down_data);
+//                   DownLoad.getInstance().startLoad(WelcomeActivity.this,down_data);
                 }
             }
         });

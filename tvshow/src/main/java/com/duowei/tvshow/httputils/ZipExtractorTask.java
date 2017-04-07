@@ -156,7 +156,9 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
             e.printStackTrace();
         }finally{
             try {
-                zip.close();
+                if(zip!=null){
+                    zip.close();
+                }
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
