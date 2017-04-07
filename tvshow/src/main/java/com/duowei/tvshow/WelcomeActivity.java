@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,15 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.duowei.tvshow.bean.CityCode;
-import com.duowei.tvshow.bean.CityCodes;
 import com.duowei.tvshow.bean.OneDataBean;
 import com.duowei.tvshow.bean.ZoneTime;
 import com.duowei.tvshow.contact.Consts;
 import com.duowei.tvshow.contact.FileDir;
 import com.duowei.tvshow.httputils.AsyncUtils;
 import com.duowei.tvshow.httputils.DownHTTP;
-import com.duowei.tvshow.httputils.DownLoad;
 import com.duowei.tvshow.httputils.VolleyResultListener;
 import com.duowei.tvshow.httputils.ZipExtractorTask;
 import com.google.gson.Gson;
@@ -47,22 +45,37 @@ public class WelcomeActivity extends AppCompatActivity {
     private Intent mIntent;
     private LinearLayout mLlLoad;
 
+    /**
+     * 广播接受器, 下载完成监听器
+     */
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction() ;
+            if( action.equals( DownloadManager.ACTION_DOWNLOAD_COMPLETE  )){
+                //下载完成了
+                mLlLoad.setVisibility(View.GONE);
+                deleteDir();
+            }
+        }
+    };
+    private DownloadManager mDownloadManager;
+    private long mRequestId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         mLlLoad = (LinearLayout) findViewById(R.id.linearLayout);
-
         if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
             Toast.makeText(this,"当前内存卡不可用",Toast.LENGTH_LONG).show();
             return;
         }
         if (getPreferData()) return;
-
-        //注册广播接收器
-//        IntentFilter filter = new IntentFilter( DownloadManager.ACTION_DOWNLOAD_COMPLETE ) ;
-//        registerReceiver( receiver , filter ) ;
         Http_contents();
+        //注册广播接收器
+        IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE) ;
+        registerReceiver(receiver,filter) ;
     }
 
     private boolean getPreferData() {
@@ -135,11 +148,24 @@ public class WelcomeActivity extends AppCompatActivity {
                         }
                     }
                     Log.e("=====",down_data);
-                    Http_File(down_data);
-//                   DownLoad.getInstance().startLoad(WelcomeActivity.this,down_data);
+//                    Http_File(down_data);
+                    startDownLoad(down_data);
                 }
             }
         });
+    }
+
+    private void startDownLoad(String down_data) {
+        mDownloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(down_data));
+        //设置下载中通知栏标题
+        request.setTitle("文件下载");
+        //设置下载中通知栏介绍
+        request.setDescription("下载中……");
+        //下载完成后显示通知栏提示
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        //每个文件都有一个requestId，可以根据这个id做其他操作
+        mRequestId = mDownloadManager.enqueue(request);
     }
 
     private void Http_File(String url) {
@@ -151,29 +177,6 @@ public class WelcomeActivity extends AppCompatActivity {
         startActivity(mIntent);
         finish();
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    /**
-     * 广播接受器, 下载完成监听器
-     */
-    BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction() ;
-            if( action.equals( DownloadManager.ACTION_DOWNLOAD_COMPLETE  )){
-                //下载完成了
-                mLlLoad.setVisibility(View.GONE);
-                deleteDir();
-            }
-            if( action.equals( DownloadManager.ACTION_NOTIFICATION_CLICKED )){
-                //广播被点击了
-//                Toast.makeText( MainActivity.this , "广播被点击了" ,  Toast.LENGTH_SHORT ).show() ;
-            }
-        }
-    };
 
     //删除文件夹和文件夹里面的文件
     public  void deleteDir() {
@@ -193,6 +196,18 @@ public class WelcomeActivity extends AppCompatActivity {
             ZipExtractorTask task = new ZipExtractorTask(FileDir.getZipVideo(), FileDir.getVideoName(), this, true);
             task.execute();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mDownloadManager.remove(mRequestId);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 
     @Override
