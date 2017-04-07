@@ -93,9 +93,11 @@ public class WelcomeActivity extends AppCompatActivity {
                 try {
                     Thread.sleep(2000);
                     num++;
-                    Http_contents();
-                    if(num>3){
-                        mIntent=new Intent(WelcomeActivity.this,SettingActivity.class);
+                    if(num<3){
+                        Http_contents();
+                    }
+                    if(num==2){
+                        mIntent=new Intent(WelcomeActivity.this,MainActivity.class);
                         startActivity(mIntent);
                         finish();
                     }

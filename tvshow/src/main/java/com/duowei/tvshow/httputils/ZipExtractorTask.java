@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.duowei.tvshow.MainActivity;
 import com.duowei.tvshow.contact.Consts;
+import com.duowei.tvshow.contact.FileDir;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -67,6 +68,16 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
         // TODO Auto-generated method stub
         //super.onPostExecute(result);
         Log.e("result==",result+"");
+        /**删除压缩包*/
+        final File file = new File(FileDir.getZipVideo());
+        if(file.exists()&&file.isFile()){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    file.delete();
+                }
+            }).start();
+        }
         if(mDialog!=null&&mDialog.isShowing()){
             Intent intent = new Intent(context, MainActivity.class);
             context.startActivity(intent);
