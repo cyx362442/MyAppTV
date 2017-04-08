@@ -153,8 +153,8 @@ public class WelcomeActivity extends AppCompatActivity {
                         }
                     }
                     Log.e("=====",down_data);
-//                    Http_File(down_data);
-                    startDownLoad(down_data);
+                    Http_File("http://7xpqoi.com1.z0.glb.clouddn.com/video.zip");
+//                    startDownLoad("http://7xpqoi.com1.z0.glb.clouddn.com/video.zip");
                 }
             }
         });
