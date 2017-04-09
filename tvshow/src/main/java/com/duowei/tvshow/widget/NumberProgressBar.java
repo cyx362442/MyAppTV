@@ -151,14 +151,20 @@ public class NumberProgressBar extends View {
         //load styled attributes.
         final TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.NumberProgressBar, defStyleAttr, 0);
 
-        mReachedBarColor = attributes.getColor(R.styleable.NumberProgressBar_progress_reached_color, default_reached_color);
+       /* mReachedBarColor = attributes.getColor(R.styleable.NumberProgressBar_progress_reached_color, default_reached_color);
         mUnreachedBarColor = attributes.getColor(R.styleable.NumberProgressBar_progress_unreached_color, default_unreached_color);
-        mTextColor = attributes.getColor(R.styleable.NumberProgressBar_progress_text_color, default_text_color);
+        mTextColor = attributes.getColor(R.styleable.NumberProgressBar_progress_text_color, default_text_color);*/
 //        mTextSize = attributes.getDimension(R.styleable.NumberProgressBar_progress_text_size, default_text_size);
-        mTextSize = 20;
+        mReachedBarColor =  Color.GREEN;
+        mUnreachedBarColor = Color.WHITE;
+        mTextColor = Color.GREEN;
+        mTextSize = 45;
 
-        mReachedBarHeight = attributes.getDimension(R.styleable.NumberProgressBar_progress_reached_bar_height, default_reached_bar_height);
-        mUnreachedBarHeight = attributes.getDimension(R.styleable.NumberProgressBar_progress_unreached_bar_height, default_unreached_bar_height);
+/*        mReachedBarHeight = attributes.getDimension(R.styleable.NumberProgressBar_progress_reached_bar_height, default_reached_bar_height);
+        mUnreachedBarHeight = attributes.getDimension(R.styleable.NumberProgressBar_progress_unreached_bar_height, default_unreached_bar_height);*/
+
+        mReachedBarHeight = 5;
+        mUnreachedBarHeight = 3;
         mOffset = attributes.getDimension(R.styleable.NumberProgressBar_progress_text_offset, default_progress_text_offset);
 
         setProgress(attributes.getInt(R.styleable.NumberProgressBar_progress, 0));
