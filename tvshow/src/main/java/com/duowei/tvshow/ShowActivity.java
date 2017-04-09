@@ -73,7 +73,6 @@ public class ShowActivity extends AppCompatActivity {
     public class ServiceBroadCast extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e("======",mLastTime+":"+CurrentTime.getTime());
             if(mLastTime>CurrentTime.getTime()){//上次时间段还未结束,返回，继续之前播放
                 return;
               }

@@ -56,7 +56,7 @@ public class AsyncUtils extends AsyncTask<String, Integer, Integer> {
             lenghtOfFile = urlConnection.getContentLength();//获取下载文件的总长度
             is = urlConnection.getInputStream();// 开启流
             fos = new FileOutputStream(fileZip);// 开启写的流
-            byte[] bytes = new byte[1024];
+            byte[] bytes = new byte[1024*10];
             while ((count = is.read(bytes)) != -1) {
                 fos.write(bytes, 0, count);
                 total += count;

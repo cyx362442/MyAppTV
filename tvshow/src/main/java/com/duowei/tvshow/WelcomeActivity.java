@@ -153,16 +153,26 @@ public class WelcomeActivity extends AppCompatActivity {
                         }
                     }
                     Log.e("=====",down_data);
-                    Http_File("http://7xpqoi.com1.z0.glb.clouddn.com/video.zip");
-//                    startDownLoad("http://7xpqoi.com1.z0.glb.clouddn.com/video.zip");
+//                    Http_File("http://7xpj8w.com1.z0.glb.clouddn.com/video12.zip");
+//                    startDownLoad("http://7xpj8w.com1.z0.glb.clouddn.com/video12.zip");
+//                    Http_File(down_data);
+                    startDownLoad(down_data);
                 }
             }
         });
     }
 
     private void startDownLoad(String down_data) {
+        File dir = new File(FileDir.getDir());//路径视频
+        if (!dir.exists()) {//路径不存在则创建
+            dir.mkdir();
+        }
+        File fileZip = new File(FileDir.getZipVideo());//下载保存的位置
+        Uri uri = Uri.fromFile(fileZip);
+
         mDownloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(down_data));
+        request.setDestinationUri(uri);
         request.allowScanningByMediaScanner();
         //设置下载中通知栏标题
         request.setTitle("文件下载");

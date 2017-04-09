@@ -11,6 +11,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 
@@ -51,7 +52,10 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
         // Setup the initial values
         SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
         mListPreference.setSummary(sharedPreferences.getString(Consts.LIST_KEY, ""));
-        mEtPreference1.setSummary(sharedPreferences.getString("edittext_key1", ""));
+
+        String edittext_key1 = sharedPreferences.getString("edittext_key1", "");
+        String url= TextUtils.isEmpty(edittext_key1)?"ai.wxdw.top":edittext_key1;
+        mEtPreference1.setSummary(url);
         mEtPreference2.setSummary(sharedPreferences.getString("edittext_key2", ""));
         mEtPreference3.setSummary(sharedPreferences.getString("edittext_key3", ""));
         // Set up a listener whenever a key changes
@@ -71,6 +75,10 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
             mEtPreference1.setSummary(sharedPreferences.getString(key, "20"));
             mEdit.putString("wurl",sharedPreferences.getString(key, "20"));
         }else if(key.equals("edittext_key2")){//微信ID
+            String edittext_key1 = sharedPreferences.getString("edittext_key1", "");
+            String url= TextUtils.isEmpty(edittext_key1)?"ai.wxdw.top":edittext_key1;
+            mEdit.putString("wurl",url);
+
             mEtPreference2.setSummary(sharedPreferences.getString(key, "20"));
             mEdit.putString("weid",sharedPreferences.getString(key, "20"));
         }else if(key.equals("edittext_key3")){//门店ID
@@ -86,7 +94,7 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
     @Override
     public boolean onPreferenceClick(Preference preference) {
         SharedPreferences spf = getPreferenceScreen().getSharedPreferences();
-        if(spf.getString(Consts.LIST_KEY,"").equals("")||spf.getString("edittext_key1","").equals("")||
+        if(spf.getString(Consts.LIST_KEY,"").equals("")||
                 spf.getString("edittext_key2","").equals("")||spf.getString("edittext_key3","").equals("")){
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
             dialog.setTitle("提示")
