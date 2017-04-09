@@ -72,8 +72,8 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("edittext_key1")) { //服务器地址
-            mEtPreference1.setSummary(sharedPreferences.getString(key, "20"));
-            mEdit.putString("wurl",sharedPreferences.getString(key, "20"));
+//            mEtPreference1.setSummary(sharedPreferences.getString(key, "20"));
+//            mEdit.putString("wurl",sharedPreferences.getString(key, "20"));
         }else if(key.equals("edittext_key2")){//微信ID
             String edittext_key1 = sharedPreferences.getString("edittext_key1", "");
             String url= TextUtils.isEmpty(edittext_key1)?"ai.wxdw.top":edittext_key1;
