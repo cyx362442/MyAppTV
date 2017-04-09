@@ -256,7 +256,7 @@ public class DownloadService extends Service {
          */
         @Override
         public void onChange(boolean selfChange) {
-            scheduledExecutorService.scheduleAtFixedRate(progressRunnable, 0, 2, TimeUnit.SECONDS);
+            scheduledExecutorService.scheduleAtFixedRate(progressRunnable, 0, 1, TimeUnit.SECONDS);
         }
     }
 
