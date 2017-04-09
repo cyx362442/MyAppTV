@@ -1,12 +1,15 @@
 package com.duowei.tvshow;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,10 +23,14 @@ import com.duowei.tvshow.bean.OneDataBean;
 import com.duowei.tvshow.bean.ZoneTime;
 import com.duowei.tvshow.contact.Consts;
 import com.duowei.tvshow.contact.FileDir;
+import com.duowei.tvshow.helper.VersionUpdate;
+import com.duowei.tvshow.helper.VersionUpdateImpl;
 import com.duowei.tvshow.httputils.AsyncUtils;
 import com.duowei.tvshow.httputils.DownHTTP;
 import com.duowei.tvshow.httputils.VolleyResultListener;
 import com.duowei.tvshow.httputils.ZipExtractorTask;
+import com.duowei.tvshow.service.DownloadService;
+import com.duowei.tvshow.widget.NumberProgressBar;
 import com.google.gson.Gson;
 
 import org.litepal.crud.DataSupport;
@@ -32,8 +39,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
-
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends AppCompatActivity implements VersionUpdateImpl {
 
     private SharedPreferences.Editor mEdit;
     private String currentVersion="";//当前版本
@@ -43,44 +49,48 @@ public class WelcomeActivity extends AppCompatActivity {
     private String mWurl;
     private String mStoreid;//门店ID
     private Intent mIntent;
-    private LinearLayout mLlLoad;
 
-    /**
-     * 广播接受器, 下载完成监听器
-     */
-    BroadcastReceiver receiver = new BroadcastReceiver() {
+    /**接收广播*/
+    private NumberProgressBar bnp;
+    private boolean isBindService;
+    private ServiceConnection conn = new ServiceConnection() {
         @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction() ;
-            if( action.equals( DownloadManager.ACTION_DOWNLOAD_COMPLETE  )){
-                //下载完成了
-                mLlLoad.setVisibility(View.GONE);
-                deleteDir();
-            }
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            DownloadService.DownloadBinder binder = (DownloadService.DownloadBinder) service;
+            DownloadService downloadService = binder.getService();
+            //接口回调，下载进度
+            downloadService.setOnProgressListener(new DownloadService.OnProgressListener() {
+                @Override
+                public void onProgress(float fraction) {
+                    bnp.setProgress((int)(fraction * 100));
+
+                    //判断是否真的下载完成进行安装了，以及是否注册绑定过服务
+                    if (fraction == DownloadService.UNBIND_SERVICE && isBindService) {
+                        bnp.setVisibility(View.GONE);
+                        unbindService(conn);
+                        isBindService = false;
+                        //解压、删除文件
+                        deleteDir();
+                    }
+                }
+            });
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
         }
     };
-    private DownloadManager mDownloadManager;
-    private long mRequestId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        mLlLoad = (LinearLayout) findViewById(R.id.linearLayout);
+        bnp = (NumberProgressBar) findViewById(R.id.number_bar);
         if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
             Toast.makeText(this,"当前内存卡不可用",Toast.LENGTH_LONG).show();
             return;
         }
         if (getPreferData()) return;
         Http_contents();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //注册广播接收器
-        IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE) ;
-        registerReceiver(receiver,filter) ;
     }
 
     private boolean getPreferData() {
@@ -107,7 +117,6 @@ public class WelcomeActivity extends AppCompatActivity {
         DownHTTP.postVolley(this.url, map,new VolleyResultListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("=====",error+"sada");
                 Toast.makeText(WelcomeActivity.this,"网络连接失败",Toast.LENGTH_LONG).show();
                 try {
                     Thread.sleep(2000);
@@ -124,7 +133,6 @@ public class WelcomeActivity extends AppCompatActivity {
             }
             @Override
             public void onResponse(String response) {
-                Log.e("=====",response);
                 Gson gson = new Gson();
                 ZoneTime zoneTime = gson.fromJson(response, ZoneTime.class);
                 String version = zoneTime.getVersion();//新版本号
@@ -156,34 +164,12 @@ public class WelcomeActivity extends AppCompatActivity {
 //                    Http_File("http://7xpj8w.com1.z0.glb.clouddn.com/video12.zip");
 //                    startDownLoad("http://7xpj8w.com1.z0.glb.clouddn.com/video12.zip");
 //                    Http_File(down_data);
-                    startDownLoad(down_data);
+//                    startDownLoad(down_data);
+                    VersionUpdate.checkVersion(WelcomeActivity.this,down_data);
                 }
             }
         });
     }
-
-    private void startDownLoad(String down_data) {
-        File dir = new File(FileDir.getDir());//路径视频
-        if (!dir.exists()) {//路径不存在则创建
-            dir.mkdir();
-        }
-        File fileZip = new File(FileDir.getZipVideo());//下载保存的位置
-        Uri uri = Uri.fromFile(fileZip);
-
-        mDownloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(down_data));
-        request.setDestinationUri(uri);
-        request.allowScanningByMediaScanner();
-        //设置下载中通知栏标题
-        request.setTitle("文件下载");
-        //设置下载中通知栏介绍
-        request.setDescription("下载中……");
-        //下载完成后显示通知栏提示
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-        //每个文件都有一个requestId，可以根据这个id做其他操作
-        mRequestId = mDownloadManager.enqueue(request);
-    }
-
     private void Http_File(String url) {
         AsyncUtils asyncUtils = new AsyncUtils(WelcomeActivity.this);
         asyncUtils.execute(url);
@@ -215,23 +201,10 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(receiver);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if(mRequestId>0){
-            mDownloadManager.remove(mRequestId);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        unregisterReceiver(receiver);
+    public void bindService(String url) {
+        Intent intent = new Intent(this, DownloadService.class);
+        intent.putExtra(DownloadService.BUNDLE_KEY_DOWNLOAD_URL, url);
+        isBindService = bindService(intent, conn, BIND_AUTO_CREATE);
     }
 
     @Override
