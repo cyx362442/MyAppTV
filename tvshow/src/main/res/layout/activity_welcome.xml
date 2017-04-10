@@ -9,10 +9,23 @@
     android:scaleType="fitXY"
     android:background="@mipmap/bg"
     tools:context="com.duowei.tvshow.WelcomeActivity">
-    <com.duowei.tvshow.widget.NumberProgressBar
-        android:id="@+id/number_bar"
-        style="@style/NumberProgressBar_Default"
-        android:layout_centerInParent="true"
-        android:padding="20dp"
-        app:progress="0"/>
+    <LinearLayout
+        android:id="@+id/ll_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="文件下载中……"
+            android:textSize="25dp"
+            android:textColor="@color/white"/>
+        <com.duowei.tvshow.widget.NumberProgressBar
+            android:id="@+id/number_bar"
+            style="@style/NumberProgressBar_Default"
+            android:layout_centerInParent="true"
+            android:padding="20dp"
+            app:progress="0"/>
+    </LinearLayout>
 </RelativeLayout>

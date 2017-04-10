@@ -66,7 +66,7 @@ public class WelcomeActivity extends AppCompatActivity implements VersionUpdateI
 
                     //判断是否真的下载完成进行安装了，以及是否注册绑定过服务
                     if (fraction == DownloadService.UNBIND_SERVICE && isBindService) {
-                        bnp.setVisibility(View.GONE);
+                        mLl_loading.setVisibility(View.GONE);
                         unbindService(conn);
                         isBindService = false;
                         //解压、删除文件
@@ -79,12 +79,14 @@ public class WelcomeActivity extends AppCompatActivity implements VersionUpdateI
         public void onServiceDisconnected(ComponentName name) {
         }
     };
+    private LinearLayout mLl_loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         bnp = (NumberProgressBar) findViewById(R.id.number_bar);
+        mLl_loading = (LinearLayout) findViewById(R.id.ll_loading);
         if(!Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
             Toast.makeText(this,"当前内存卡不可用",Toast.LENGTH_LONG).show();
             return;
